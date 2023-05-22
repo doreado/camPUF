@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
-from scipy.datasets import face
 from scipy.signal import wiener
 from scipy.fftpack import dct, idct
 
@@ -32,7 +31,7 @@ def get_hf_noise(img_path, plot_results=False):
 
     # Exctracting high frequencies steps
     # Transform the image in dct domain
-    dct_noise = cv2.dct(np.float32(noise_img))
+    dct_noise = dct(np.float32(noise_img))
  
     # Get the filtering matrix
     (H, W) = gray_img.shape
