@@ -6,3 +6,6 @@ key_length = 128*2
 compensation_margin = 0
 # Nb = L + Nm
 num_blocks = key_length + compensation_margin
+
+hamming_threshold = 1
+
