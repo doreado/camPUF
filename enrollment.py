@@ -1,28 +1,23 @@
 import numpy as np
 import cv2
 
+import constants
 from extract_dsnu import get_hf_noise
-
-img_path = './images/IMG_5985.CR2'
-
-key_length = 128*2
-compensation_margin = 0
-num_blocks = key_length + compensation_margin
 
 test = True
 if not test:
-    hf_noise = get_hf_noise(img_path, False)
+    hf_noise = get_hf_noise(constants.img_path, False)
     # Flatten the matrix
     flattened_hf_noise = hf_noise.flatten()
 else:
     flattened_hf_noise = np.array([2, 5, 6, 14, 3, 1, 5, 2, 5, 11, 9, 6, 9, 8, 1, 10, 9, 8, 7, 10])
-    num_blocks = 5
+    constants.num_blocks = 5
 
-print('num_blocks:', num_blocks)
+print('num_blocks:', constants.num_blocks)
 # Split the flattened matrix into blocks
-blocks = np.array_split(flattened_hf_noise, num_blocks)
+blocks = np.array_split(flattened_hf_noise, constants.num_blocks)
 
-block_size = len(flattened_hf_noise) // num_blocks
+block_size = len(flattened_hf_noise) // constants.num_blocks
 print('block_size:', block_size)
 # Get a list of tuples (maximum value, linear index, block index)
 max_values = [(block.max(), block.argmax() + i * block_size, i) for i, block in enumerate(blocks)]
