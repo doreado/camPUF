@@ -1,3 +1,4 @@
+import os
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
@@ -11,12 +12,23 @@ def get_filtering_matrix(H, W, c):
 
 def get_hf_noise(img_path, plot_results=False):
     img = cv2.imread(img_path)
+    
+    # Check if the image is read
+    if img is None:
+        print("Failed to read the image file!")
+        return -1
 
     # Convert image to grayscale
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
+    # Check if image is useful
+    print(np.max(gray_img))
+    if gray_img.max() == 0:
+        print("The image has no useful data!")
+        return -2
+
     # Filter the image, applying the wiener filter
-    filtered_img = wiener(gray_img, (5,5))
+    filtered_img = wiener(np.float64(gray_img), (5,5))
 
     # Normalize the image
     filtered_img = np.interp(filtered_img, (filtered_img.min(), filtered_img.max()), (0, 255))
@@ -31,7 +43,7 @@ def get_hf_noise(img_path, plot_results=False):
 
     # Exctracting high frequencies steps
     # Transform the image in dct domain
-    dct_noise = dct(np.float32(noise_img))
+    dct_noise = dct(np.float64(noise_img))
  
     # Get the filtering matrix
     (H, W) = gray_img.shape
@@ -42,7 +54,7 @@ def get_hf_noise(img_path, plot_results=False):
     hadamard_prod = np.multiply(dct_noise, d)
 
     # Return to the original domain
-    hf_noise = idct(np.float32(hadamard_prod))
+    hf_noise = idct(np.float64(hadamard_prod))
     hf_noise = np.interp(hf_noise, (hf_noise.min(), hf_noise.max()), (0, 255))
 
     if plot_results:
@@ -50,7 +62,7 @@ def get_hf_noise(img_path, plot_results=False):
 
         plot1.axis("off")
         plot1.set_title("Original")
-        plot1.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        plot1.imshow(gray_img)
 
         plot2.axis("off")
         plot2.set_title("Noise image")
@@ -63,3 +75,15 @@ def get_hf_noise(img_path, plot_results=False):
         plt.show()
 
     return hf_noise
+
+# TEST
+script_dir = os.path.dirname(os.path.abspath(__file__))
+img_path_v = os.path.join(script_dir, 'downloads', 'vincenzo_t.DNG')
+img_path_a = os.path.join(script_dir, 'downloads', 'andrea_t.DNG')
+img_path_g = os.path.join(script_dir, 'downloads', 'giulia_t.DNG')
+img_path_gB = os.path.join(script_dir, 'downloads', 'giulia_tas.DNG')
+img_path_m = os.path.join(script_dir, 'downloads', 'marco_t.DNG')
+
+img_path_test = os.path.join(script_dir, 'images', 'IMG_5985.CR2')
+
+get_hf_noise(img_path_test, True)
