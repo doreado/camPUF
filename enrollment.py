@@ -43,25 +43,22 @@ def get_indeces(img: np.ndarray):
         try:
             assert block.max() == flattened_hf_noise[np.uint64(block.argmax() + i * actual_block_size)]
         except:
-            index = np.uint64(block.argmax(i * actual_block_size))
-            print("got index", index)
-            print("searching for the real index forward")
-            countUp = index + 1
-            countDw = index - 1
-            while True:
-                if flattened_hf_noise[countUp] == block.max():
-                    print("hit forward at [", count, "]")
-                    break
-                count = count + 1
+            index = np.uint64(block.argmax() + i * actual_block_size)
+            print("got index", index, "for", block.max())
 
-                if flattened_hf_noise[count] == block.max():
-                    print("hit at [", count, "]")
-                    break
-                count = count - 1
+            print("10 element forward")
+            for j in range(1, 10):
+                if block.max() == flattened_hf_noise[np.uint64(block.argmax() + (i * actual_block_size) + j)]:
+                    print(".", j, ".", "hit at" , np.uint64(block.argmax() + (i * actual_block_size) + j))
+
+            print("10 element backward")
+            for j in range(1, 10):
+                if block.max() == flattened_hf_noise[np.uint64(block.argmax() + (i * actual_block_size) - j)]:
+                    print(".", j, ".", "hit at" , np.uint64(block.argmax() + (i * actual_block_size) - j))
 
         max_values.append((
             np.uint8(block.max()),
-            np.uint64(block.argmax() + i * actual_block_size - 1),
+            np.uint64(block.argmax() + i * actual_block_size),
             i
         ))
 
