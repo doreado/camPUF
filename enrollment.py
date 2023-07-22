@@ -3,6 +3,14 @@ import numpy as np
 
 import constants
 
+def get_linear_index(block_index, block_size, offset, rem):
+    # the first rem elements have an additional element
+    # so the next ones must consider it
+    if block_index > rem: # (hf_length % constants.num_blocks):
+        offset = offset + rem
+
+    return block_index * block_size + offset
+
 def get_indeces(img: np.ndarray):
     """
     Get the indices of brighter and darker pixels in an image.
@@ -17,86 +25,35 @@ def get_indeces(img: np.ndarray):
     """
 
     flattened_hf_noise = img.flatten()
-    height, width = img.shape
-    print("[DEBUG] the noise image has", height, "x", width)
-    print("[DEBUG] having an noise image of", len(flattened_hf_noise), "pixels")
-    print("[DEBUG] dividing the noise image in", constants.num_blocks, "blocks")
     # Split the flattened matrix into blocks
     # if the length of the image is not a multiple of num_blocks
     # an element is added to the first length % num_blocks blocks
     blocks = np.array_split(flattened_hf_noise, constants.num_blocks)
+    rem = len(flattened_hf_noise) % constants.num_blocks
 
-    block_size = np.uint64(np.ceil(len(flattened_hf_noise) / constants.num_blocks))
-    print("[DEBUG] working with a block size of", block_size, "pixels")
-    print("[DEBUG] the first", len(flattened_hf_noise) % constants.num_blocks, "are", block_size + 1, "long")
     # Get a list of tuples (maximum value, linear index, block index)
+    max_values = [(
+        np.uint8(block.max()),
+        np.uint64(get_linear_index(i, len(block), block.argmax(), rem)),
+        i
+    ) for i, blockimgenumerate(blocks)]
 
-    max_values = []
-    for i, block in enumerate(blocks):
-        count = 0
-        print("[", i, "]")
-        if i < (len(flattened_hf_noise) % constants.num_blocks):
-            actual_block_size = (block_size+1)
-        else:
-            actual_block_size = block_size
-
-        try:
-            assert block.max() == flattened_hf_noise[np.uint64(block.argmax() + i * actual_block_size)]
-        except:
-            index = np.uint64(block.argmax() + i * actual_block_size)
-            print("got index", index, "for", block.max())
-
-            print("10 element forward")
-            for j in range(1, 10):
-                if block.max() == flattened_hf_noise[np.uint64(block.argmax() + (i * actual_block_size) + j)]:
-                    print(".", j, ".", "hit at" , np.uint64(block.argmax() + (i * actual_block_size) + j))
-
-            print("10 element backward")
-            for j in range(1, 10):
-                if block.max() == flattened_hf_noise[np.uint64(block.argmax() + (i * actual_block_size) - j)]:
-                    print(".", j, ".", "hit at" , np.uint64(block.argmax() + (i * actual_block_size) - j))
-
-        max_values.append((
-            np.uint8(block.max()),
-            np.uint64(block.argmax() + i * actual_block_size),
-            i
-        ))
-
-    # print("max_values")
-    # print(max_values)
-    # Sort the list using the brightness as ordering key
-    sorted_values = sorted(max_values, key=lambda x: x[0]) # Select the brighter half
+    sorted_values = sorted(max_values, key=lambda x: x[0])
     # TODO use np.split to split the array in two
     # half_bright, half_dark = np.split(sorted_values, 2)
 
-    # half_bright = sorted_values[-len(sorted_values) // 2 - 1:]
     half_bright = sorted_values[len(sorted_values) // 2 : len(sorted_values)]
-    # print("HALF BRIGHTER")
-    # print(half_bright)
-    # Save the indices 
     idx_brighter = [e[1] for e in half_bright]
 
     # Select the other half
     less_brighter = sorted_values[:len(sorted_values) // 2]
     # Search the darker pixels in those blocks
-    half_dark = []
-    for _,_,i in less_brighter:
-        if i < (len(flattened_hf_noise) % constants.num_blocks):
-            actual_block_size = (block_size+1)
-        else:
-            actual_block_size = block_size
-
-        assert blocks[i].min() == flattened_hf_noise[np.uint64(blocks[i].argmax() + i * actual_block_size)]
-
-        half_dark.append((
+    half_dark = [(
             np.uint8(blocks[i].min()),
-            np.uint64(blocks[i].argmin() + i * actual_block_size),
+            np.uint64(get_linear_index(i, len(blocks[i]), blocks[i].argmin(), rem)),
             i
-        ))
+    ) for _,_,i in less_brighter ]
 
-    # print("HALF DARK")
-    # print(half_dark)
-    # Select the linear indices of the darker pixels
     idx_darker = [e[1] for e in half_dark]
 
     return idx_brighter, idx_darker
@@ -159,8 +116,6 @@ def get_challenge(idx_bright, idx_dark):
 def get_response_key(hf_noise, challenge):
     m = [hf_noise[i] for i in challenge]
     median = np.median(m)
-    print(m)
-    print(median)
     response = [1 if i >= median else 0 for i in m]
 
     return response
