@@ -38,7 +38,7 @@ def authenticate(idx_bright, idx_dark, auth_hf_noise):
 test = False
 script_dir = os.path.dirname(os.path.abspath(__file__))
 img_path_test = os.path.join(script_dir, 'downloads', 'raw', 'set-01', 'sensor-05', 'img-13.raw')
-img_path_test_a = os.path.join(script_dir, 'downloads', 'raw', 'set-01', 'sensor-05', 'img-01.raw')
+img_path_test_a = os.path.join(script_dir, 'downloads', 'raw', 'set-01', 'sensor-03', 'img-01.raw')
 
 enroll_img = img_path_test
 auth_img = img_path_test_a
