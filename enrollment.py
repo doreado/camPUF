@@ -36,7 +36,7 @@ def get_indeces(img: np.ndarray):
         np.uint8(block.max()),
         np.uint64(get_linear_index(i, len(block), block.argmax(), rem)),
         i
-    ) for i, blockimgenumerate(blocks)]
+    ) for i, block in enumerate(blocks)]
 
     sorted_values = sorted(max_values, key=lambda x: x[0])
     # TODO use np.split to split the array in two

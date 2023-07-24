@@ -1,6 +1,6 @@
 from importlib import reload
 import numpy as np
-
+import os
 import constants
 import extract_dsnu
 import enrollment
@@ -36,14 +36,18 @@ def authenticate(idx_bright, idx_dark, auth_hf_noise):
         print("NEVER GONNA GIVE YOU UP")
 
 test = False
-enroll_img = './images/IMG_5985.CR2'
-auth_img = './images/IMG_5985.CR2'
+script_dir = os.path.dirname(os.path.abspath(__file__))
+img_path_test = os.path.join(script_dir, 'downloads', 'raw', 'set-01', 'sensor-05', 'img-13.raw')
+img_path_test_a = os.path.join(script_dir, 'downloads', 'raw', 'set-01', 'sensor-05', 'img-01.raw')
+
+enroll_img = img_path_test
+auth_img = img_path_test_a
 # enroll_img = './images/IMG_5985.CR2'
 # auth_img = './images/IMG_5986.CR2'
 
 if not test:
     enr_hf_noise = extract_dsnu.get_hf_noise(enroll_img, False)
-    auth_hf_noise = enr_hf_noise
+    auth_hf_noise = extract_dsnu.get_hf_noise(auth_img, False)
 
     print(enr_hf_noise == auth_hf_noise)
 else:
