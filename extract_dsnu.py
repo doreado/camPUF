@@ -11,15 +11,16 @@ def get_filtering_matrix(H, W, c):
     return d
 
 def get_hf_noise(img_path, plot_results=False):
-    img = cv2.imread(img_path)
-    
+    with open(img_path, 'rb') as file:
+        data = np.fromfile(file, dtype=np.uint16)
+
     # Check if the image is read
-    if img is None:
+    if data is None:
         print("Failed to read the image file!")
         return -1
-
-    # Convert image to grayscale
-    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+    # Reshape the 1D array to a 2D array (image) with the given width and height
+    gray_img = data.reshape((4080, 3028))
 
     # Check if image is useful
     print(np.max(gray_img))
@@ -78,12 +79,6 @@ def get_hf_noise(img_path, plot_results=False):
 
 # TEST
 script_dir = os.path.dirname(os.path.abspath(__file__))
-img_path_v = os.path.join(script_dir, 'downloads', 'vincenzo_t.DNG')
-img_path_a = os.path.join(script_dir, 'downloads', 'andrea_t.DNG')
-img_path_g = os.path.join(script_dir, 'downloads', 'giulia_t.DNG')
-img_path_gB = os.path.join(script_dir, 'downloads', 'giulia_tas.DNG')
-img_path_m = os.path.join(script_dir, 'downloads', 'marco_t.DNG')
-
-img_path_test = os.path.join(script_dir, 'images', 'IMG_5985.CR2')
+img_path_test = os.path.join(script_dir, 'downloads', 'raw', 'set-01', 'sensor-01', 'img-03.raw')
 
 get_hf_noise(img_path_test, True)
