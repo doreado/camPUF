@@ -3,6 +3,14 @@ import numpy as np
 
 import constants
 
+def get_linear_index(block_index, block_size, offset, rem):
+    # the first rem elements have an additional element
+    # so the next ones must consider it
+    if block_index > rem: # (hf_length % constants.num_blocks):
+        offset = offset + rem
+
+    return block_index * block_size + offset
+
 def get_indeces(img: np.ndarray):
     """
     Get the indices of brighter and darker pixels in an image.
@@ -18,23 +26,34 @@ def get_indeces(img: np.ndarray):
 
     flattened_hf_noise = img.flatten()
     # Split the flattened matrix into blocks
+    # if the length of the image is not a multiple of num_blocks
+    # an element is added to the first length % num_blocks blocks
     blocks = np.array_split(flattened_hf_noise, constants.num_blocks)
+    rem = len(flattened_hf_noise) % constants.num_blocks
 
-    block_size = len(flattened_hf_noise) // constants.num_blocks
     # Get a list of tuples (maximum value, linear index, block index)
-    max_values = [(block.max(), block.argmax() + i * block_size, i) for i, block in enumerate(blocks)]
+    max_values = [(
+        np.uint8(block.max()),
+        np.uint64(get_linear_index(i, len(block), block.argmax(), rem)),
+        i
+    ) for i, blockimgenumerate(blocks)]
 
-    # Sort the list using the brightness as ordering key
-    sorted_values = sorted(max_values, key=lambda x: x[0]) # Select the brighter half
-    half_bright = sorted_values[-len(sorted_values) // 2:]
-    # Save the indices 
+    sorted_values = sorted(max_values, key=lambda x: x[0])
+    # TODO use np.split to split the array in two
+    # half_bright, half_dark = np.split(sorted_values, 2)
+
+    half_bright = sorted_values[len(sorted_values) // 2 : len(sorted_values)]
     idx_brighter = [e[1] for e in half_bright]
 
     # Select the other half
     less_brighter = sorted_values[:len(sorted_values) // 2]
     # Search the darker pixels in those blocks
-    half_dark = [(blocks[i].min(), blocks[i].argmin() + i * block_size, i) for _,_,i in less_brighter]
-    # Select the linear indices of the darker pixels
+    half_dark = [(
+            np.uint8(blocks[i].min()),
+            np.uint64(get_linear_index(i, len(blocks[i]), blocks[i].argmin(), rem)),
+            i
+    ) for _,_,i in less_brighter ]
+
     idx_darker = [e[1] for e in half_dark]
 
     return idx_brighter, idx_darker
@@ -46,7 +65,6 @@ def hamming_distance(a, b):
     Args:
         challenge (List[int]): List containing the challenge values.
         response (List[int]): List containing the response values.
-
     Returns:
         int: The Hamming distance between the challenge and response lists.
 
@@ -58,7 +76,7 @@ def hamming_distance(a, b):
         raise ValueError("Input lists must have the same length.")
 
     distance = sum(bit1 != bit2 for bit1, bit2 in zip(a, b))
-    print(distance)
+    print("[DEBUG] distance", distance)
 
     return distance
 
@@ -74,7 +92,6 @@ def are_equal(challenge: list[int], response: list[int], hamming_threshold = con
     Returns:
         bool: True if the Hamming distance is below or equal to the threshold, False otherwise.
     """
-
     return hamming_distance(challenge, response) <= hamming_threshold
 
 def get_reference_key(challenge, idx_bright):

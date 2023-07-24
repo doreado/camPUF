@@ -2,8 +2,55 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
+import rawpy
 from scipy.signal import wiener
 from scipy.fftpack import dct, idct
+import rawpy
+import cv2
+
+def read_cr2_image(cr2_file_path):
+    with rawpy.imread(cr2_file_path) as raw:
+        rgb_image = raw.postprocess(use_camera_wb=True, half_size=False, no_auto_bright=True)
+        return rgb_image
+
+def denoise_cr2_image(cr2_image_path):
+    # Convert image to 8-bit unsigned integer format (CV_8U)
+    # cr2_image_uint8 = (cr2_image * 255).astype(np.uint8)
+    cr2_image = read_cr2_image(cr2_image_path)
+    cr2_image_uint8 = cr2_image.astype(np.uint8)
+
+    # Apply Non-Local Means Denoising
+    denoised_image_uint8 = cv2.fastNlMeansDenoisingColored(cr2_image_uint8, None, h=10, templateWindowSize=7, searchWindowSize=21)
+
+    # Convert back to floating-point format
+    # denoised_image = denoised_image_uint8.astype(np.float32) / 255.0
+    denoised_image = denoised_image_uint8
+
+    return denoised_image
+
+# TODO test it
+def wiener_filter(image, nsr):
+    # Compute the power spectral density of the observed image
+    psd_image = np.abs(np.fft.fft2(image)) ** 2
+
+    # Compute the Wiener filter
+    wiener_filter = 1 / (1 + nsr / psd_image)
+
+    # Apply the Wiener filter in the frequency domain
+    filtered_image = np.fft.ifft2(np.fft.fft2(image) * wiener_filter).real
+
+    # Clip the pixel values to the valid range [0, 1]
+    filtered_image = np.clip(filtered_image, 0, 1)
+
+    return filtered_image
+
+# implement 2D DCT
+def dct2(a):
+    return dct(dct(np.float64(a.T), norm='ortho').T, norm='ortho')
+
+# implement 2D IDCT
+def idct2(a):
+    return idct(idct(np.float64(a.T), norm='ortho').T, norm='ortho')
 
 def get_filtering_matrix(H, W, c):
     d = np.zeros((H, W), dtype=int)
@@ -40,12 +87,19 @@ def get_hf_noise(img_path, plot_results=False):
 
     # Perform the subtraction to obtain the noise
     noise_img = cv2.absdiff(filtered_img, gray_img)
+    print('noise')
+    print(noise_img)
+
     noise_img = np.interp(noise_img, (noise_img.min(), noise_img.max()), (0, 255))
 
     # Exctracting high frequencies steps
     # Transform the image in dct domain
-    dct_noise = dct(np.float64(noise_img))
- 
+    # dct_noise = dct(np.float64(noise_img), cv2.DCT_INVERSE)
+    # dct_noise = dct(np.float64(noise_img), cv2.DCT_INVERSE)
+    dct_noise = dct2(noise_img)
+    print('dct noise')
+    print(dct_noise)
+
     # Get the filtering matrix
     (H, W) = gray_img.shape
     c = 0.5
@@ -53,10 +107,14 @@ def get_hf_noise(img_path, plot_results=False):
 
     # Filter the noise image, multiplying it with the filtering matrix
     hadamard_prod = np.multiply(dct_noise, d)
+    print('hadamard')
+    print(hadamard_prod)
 
     # Return to the original domain
-    hf_noise = idct(np.float64(hadamard_prod))
-    hf_noise = np.interp(hf_noise, (hf_noise.min(), hf_noise.max()), (0, 255))
+    hf_noise = idct2(hadamard_prod)
+    hf_noise = np.uint8(np.interp(hf_noise, (hf_noise.min(), hf_noise.max()), (0, 255)))
+    print("hf noise")
+    print(hf_noise)
 
     if plot_results:
         f, (plot1, plot2, plot3) = plt.subplots(1, 3)
