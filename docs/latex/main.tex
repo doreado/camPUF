@@ -8,7 +8,7 @@
 \begin{document}
 \maketitle
 \section{Introduction}
-In this era where digital security is very important, hardware-based security  is on the rise because provide very complex and reliable solutions. Physically Unclonable Functions (PUFs) have emerged as a promising approach to address the challenges of hardware authentication, secure key generation, and anti-counterfeiting measures. Among the various PUF implementations, Complementary Metal-Oxide-Semiconductor Arbiter PUFs (CAMPUFs) stand out as a powerful hardware security primitive based on CMOS technology.
+In this era where digital security is very important, hardware-based security is on the rise because it provides very complex and reliable solutions. Physically Unclonable Functions (PUFs) have emerged as a promising approach to address the challenges of hardware authentication, secure key generation, and anti-counterfeiting measures. Among the various PUF implementations, Complementary Metal-Oxide-Semiconductor Arbiter PUFs (CAMPUFs) stand out as a powerful hardware security primitive based on CMOS technology.
 
 CAMPUFs leverage the unique physical variations inherent in CMOS integrated circuits to generate unpredictable and practically unclonable responses. The foundation of CMOS technology, with its low power consumption and high integration capabilities, makes it an ideal platform for building complex digital circuits and implementing PUFs.
 
@@ -85,5 +85,31 @@ Examples of Extrinsic PUFs
 Ambient Light PUFs: Ambient light PUFs utilize the incident light level on the chip's surface to create distinct response patterns. Variations in light intensity cause corresponding variations in the generated responses, enabling unique identification.
 
 Temperature PUFs: Temperature PUFs exploit temperature-induced changes in the electrical characteristics of the chip. Different temperature levels result in varied responses, contributing to the unclonable behavior of the device.
+
+
+\section{\textbf{Technical Manual}}
+(Aimed at engineers, technical users that work directly with source code etc.)
+
+(Provide architectural overview of the project components and explain their interactions)
+
+(code structure, key modules + tools required to build project and run it)
+
+This camPUF implementation is based on CMOS image sensors, typically present on modern smartphone cameras.
+The entirety of the project consists of a digital signal processing part and a device authentication part.
+All the project is implemented using Python3
+Here is the list of the libraries used:
+
+\begin{itemize}
+\item Opencv: computer vision library, used to extract data from raw images 
+\item scipy: python library that provides mathematical instruments and algorithms
+\item MatPlotlib: graph library for math visualizations
+\end{itemize}
+
+There are two main python modules, one for DSNU extraction and one for the enrollment procedure.
+The modules are \textit{extract_dsnu.py} and \textit{enrollment.py}
+
+\textit{server.py} 
+
+
 
 \end{document}
