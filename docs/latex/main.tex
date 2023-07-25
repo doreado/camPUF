@@ -8,14 +8,30 @@
 \begin{document}
 \maketitle
 \section{Introduction}
-In this era where digital security is very important, hardware-based security is on the rise because it provides very complex and reliable solutions. Physically Unclonable Functions (PUFs) have emerged as a promising approach to address the challenges of hardware authentication, secure key generation, and anti-counterfeiting measures. Among the various PUF implementations, Complementary Metal-Oxide-Semiconductor Arbiter PUFs (CAMPUFs) stand out as a powerful hardware security primitive based on CMOS technology.
+In this era where digital security is very important, hardware-based security is on the rise because it provides very complex and reliable solutions.
+Physically Unclonable Functions (PUFs) have emerged as a promising approach to address the challenges of hardware authentication, secure key generation,
+and anti-counterfeiting measures. Among the various PUF implementations, Complementary Metal-Oxide-Semiconductor Arbiter PUFs (CAMPUFs) stand out as a powerful
+hardware security primitive based on CMOS technology.
 
-CAMPUFs leverage the unique physical variations inherent in CMOS integrated circuits to generate unpredictable and practically unclonable responses. The foundation of CMOS technology, with its low power consumption and high integration capabilities, makes it an ideal platform for building complex digital circuits and implementing PUFs.
+CAMPUFs leverage the unique physical variations inherent in CMOS integrated circuits to generate unpredictable and practically unclonable responses.
+The foundation of CMOS technology, with its low power consumption and high integration capabilities, makes it an ideal platform for building complex 
+digital circuits and implementing PUFs.
 
-This documentation will present and underly principles of PUFs, explain the workings of CAMPUFs.
-\section{General characteristics}
-Physically unclonable functions (PUFs) are a technique in hardware security that exploits inherent device variations to produce an unclonable, unique device response to a given input.
-\subsection{Purposes} TOTALMENTE COPIATI DA CHATGPT QUESTI
+This section will describe the general theory concepts around camPUF needed to understand it.
+\subsection{General concepts}
+\begin{itemize}
+\item \textbf{PUF}: Physically Unclonable Function (PUF) is a security metric that exploits inherent device physical variations to produce an unclonable, 
+unique device response to a given input. Unclonability means that each PUF has a unpredictable response to stimuli, because the response is created by complex interactions between many random components.
+PUFs implement a challenge-response type of authentication. They act as a unique device identifier.
+\item \textbf{Fixed Pattern Noise}: it is a particular noise pattern present on digital imaging sensors, caused by small differences in specific sensor pixels, patterns can result in brighter or darker pixels.
+    It is created from two sources: PRNU (Photo Response Non-Uniformity) and DSNU (Dark Signal Non-Uniformity). The latter will be the focus of our PUF implementation.
+\item \textbf{DSNU}: Dark Signal Non-Uniformity is a type of noise that occurs in dark images. The intensity values for pixels does not start from zero, an offset is added on every pixel,
+    to avoid signal values dropping lower than zero. This makes each pixel to always have a non-zero value, which is the \textbf{bias}
+    Fluctuation in the bias is the DSNU
+
+\end{itemize}
+
+\subsection{Properties} TOTALMENTE COPIATI DA CHATGPT QUESTI
 
 \textbf{Key Generation}: PUFs can generate cryptographic keys directly from the unique physical responses of the ICs. These keys can be used for secure communication, encryption, and data protection.
 
@@ -85,8 +101,6 @@ Examples of Extrinsic PUFs
 Ambient Light PUFs: Ambient light PUFs utilize the incident light level on the chip's surface to create distinct response patterns. Variations in light intensity cause corresponding variations in the generated responses, enabling unique identification.
 
 Temperature PUFs: Temperature PUFs exploit temperature-induced changes in the electrical characteristics of the chip. Different temperature levels result in varied responses, contributing to the unclonable behavior of the device.
-
-
 \section{\textbf{Technical Manual}}
 (Aimed at engineers, technical users that work directly with source code etc.)
 
@@ -106,9 +120,8 @@ Here is the list of the libraries used:
 \end{itemize}
 
 There are two main python modules, one for DSNU extraction and one for the enrollment procedure.
-The modules are \textit{extract_dsnu.py} and \textit{enrollment.py}
-
-\textit{server.py} 
+%The modules are \textit{extract_dsnu.py} and \textit{enrollment.py}
+%\textit{server.py} 
 
 
 
