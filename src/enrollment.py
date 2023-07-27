@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import constants
+import logging
 
 def get_linear_index(block_index, block_size, offset, rem):
     # the first rem elements have an additional element
@@ -75,7 +76,7 @@ def hamming_distance(a, b):
         raise ValueError("Input lists must have the same length.")
 
     distance = sum(bit1 != bit2 for bit1, bit2 in zip(a, b))
-    print("[DEBUG] distance", distance)
+    logging.debug("[DEBUG] distance", distance)
 
     return distance
 
@@ -91,7 +92,7 @@ def are_equal(challenge: list[int], response: list[int], hamming_threshold = con
     Returns:
         bool: True if the Hamming distance is below or equal to the threshold, False otherwise.
     """
-    return hamming_distance(challenge, response) <= hamming_threshold
+    return hamming_distance(challenge, response) <= hamming_threshold, hamming_distance(challenge, response)
 
 def get_reference_key(challenge, idx_bright):
     # Get the reference key

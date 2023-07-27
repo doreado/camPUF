@@ -1,4 +1,8 @@
 import os
+import logging, sys
+
+# Logging
+logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
 # Path
 dataset_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "dataset", "raw"))
