@@ -1,37 +1,19 @@
 \documentclass{article}
 \usepackage{graphicx} % Required for inserting images
-
 \title{\textbf{PHYSICALLY UNCLONABLE FUNCTIONS (PUFs) and CAMPUFs: Utilizing CMOS Technology for Hardware-Based Security}}
-\author{ Group 08 } % TODO: aggiungere nomi
+\author{ Group xxxx }
 \date{July 2023}
-
 \begin{document}
-\maketitle
+\maketitle 
 \section{Introduction}
-In this era where digital security is very important, hardware-based security is on the rise because it provides very complex and reliable solutions.
-Physically Unclonable Functions (PUFs) have emerged as a promising approach to address the challenges of hardware authentication, secure key generation,
-and anti-counterfeiting measures. Among the various PUF implementations, Complementary Metal-Oxide-Semiconductor Arbiter PUFs (CAMPUFs) stand out as a powerful
-hardware security primitive based on CMOS technology.
+In this era where digital security is very important, hardware-based security  is on the rise because provide very complex and reliable solutions. Physically Unclonable Functions (PUFs) have emerged as a promising approach to address the challenges of hardware authentication, secure key generation, and anti-counterfeiting measures. Among the various PUF implementations, Complementary Metal-Oxide-Semiconductor Arbiter PUFs (CAMPUFs) stand out as a powerful hardware security primitive based on CMOS technology.
 
-CAMPUFs leverage the unique physical variations inherent in CMOS integrated circuits to generate unpredictable and practically unclonable responses.
-The foundation of CMOS technology, with its low power consumption and high integration capabilities, makes it an ideal platform for building complex 
-digital circuits and implementing PUFs.
+CAMPUFs leverage the unique physical variations inherent in CMOS integrated circuits to generate unpredictable and practically unclonable responses. The foundation of CMOS technology, with its low power consumption and high integration capabilities, makes it an ideal platform for building complex digital circuits and implementing PUFs.
 
-This section will describe the general theory concepts around camPUF needed to understand it.
-\subsection{General concepts}
-\begin{itemize}
-\item \textbf{PUF}: Physically Unclonable Function (PUF) is a security metric that exploits inherent device physical variations to produce an unclonable, 
-unique device response to a given input. Unclonability means that each PUF has a unpredictable response to stimuli, because the response is created by complex interactions between many random components.
-PUFs implement a challenge-response type of authentication. They act as a unique device identifier.
-\item \textbf{Fixed Pattern Noise}: it is a particular noise pattern present on digital imaging sensors, caused by small differences in specific sensor pixels, patterns can result in brighter or darker pixels.
-    It is created from two sources: PRNU (Photo Response Non-Uniformity) and DSNU (Dark Signal Non-Uniformity). The latter will be the focus of our PUF implementation.
-\item \textbf{DSNU}: Dark Signal Non-Uniformity is a type of noise that occurs in dark images. The intensity values for pixels does not start from zero, an offset is added on every pixel,
-    to avoid signal values dropping lower than zero. This makes each pixel to always have a non-zero value, which is the \textbf{bias}
-    Fluctuation in the bias is the DSNU
-
-\end{itemize}
-
-\subsection{Properties} TOTALMENTE COPIATI DA CHATGPT QUESTI
+This documentation will present and underly principles of PUFs, explain the workings of CAMPUFs.
+\section{General characteristics}
+Physically unclonable functions (PUFs) are a technique in hardware security that exploits inherent device variations to produce an unclonable, unique device response to a given input.
+\subsection{Purposes} TOTALMENTE COPIATI DA CHATGPT QUESTI
 
 \textbf{Key Generation}: PUFs can generate cryptographic keys directly from the unique physical responses of the ICs. These keys can be used for secure communication, encryption, and data protection.
 
@@ -41,14 +23,15 @@ PUFs implement a challenge-response type of authentication. They act as a unique
 
 \textbf{Authentication}: PUF responses can be used for secure device authentication, verifying the identity and integrity of hardware components in various applications, such as secure booting and secure firmware updates.
 
+
+
 \textbf{Uniqueness and Unpredictability}: PUFs generate device-specific responses based on the inherent physical variations during manufacturing. As a result, each instance of the IC exhibits a unique response, making it practically impossible to clone or replicate the device.
 
 \textbf{Anti-Counterfeiting Measures}: PUFs play a crucial role in preventing counterfeiting and unauthorized duplication of hardware components, as the uniqueness of the responses ensures the authenticity of genuine devices.
 
-
 \subsection{Security Properties and Applications of PUFs}
-
 \textbf{Key Security Properties of PUFs}
+
 
 \textbf{Unpredictability}: The inherent randomness linked to  PUF responses, even when given the same challenge multiple times. This property makes stonger the security of PUF-based authentication and key generation.
 
@@ -77,30 +60,29 @@ PUFs implement a challenge-response type of authentication. They act as a unique
 \textbf{NON SO SE METTERE STA ROBA SOTTO CHE SAREBBE DA CAMBIARE PERCHE UGUALE A CHATGPT}
 
 
-1.2.1 Intrinsic PUFs
-Characteristics of Intrinsic PUFs
+subsection{Intrinsic PUFs}
 
 Intrinsic PUFs are characterized by their reliance on the inherent physical variations present within a single chip during the semiconductor manufacturing process. These variations arise due to manufacturing imperfections, process fluctuations, and random dopant fluctuations. The unique characteristics of each individual chip create a fingerprint-like response, making Intrinsic PUFs ideal for hardware authentication and identification purposes.
 
-Common Implementations of Intrinsic PUFs
+Common Implementations of Intrinsic PUFs are:
+\begin{itemize}
+\item Delay PUFs: Delay PUFs exploit the differences in signal propagation delay along various paths within the circuit. By measuring these delays, a set of unique challenge-response pairs can be generated, forming the basis for secure authentication.
 
-Delay PUFs: Delay PUFs exploit the differences in signal propagation delay along various paths within the circuit. By measuring these delays, a set of unique challenge-response pairs can be generated, forming the basis for secure authentication.
+\item Ring Oscillator PUFs: Ring oscillator PUFs use the frequency differences in ring oscillators, circuits comprising an odd number of inverters. The varying delays in these oscillators result in distinctive response patterns, enabling the generation of cryptographic keys and unique device identifiers.
 
-Ring Oscillator PUFs: Ring oscillator PUFs use the frequency differences in ring oscillators, circuits comprising an odd number of inverters. The varying delays in these oscillators result in distinctive response patterns, enabling the generation of cryptographic keys and unique device identifiers.
+\item Butterfly PUFs: Butterfly PUFs combine two Ring Oscillator PUFs to enhance the quality and randomness of the responses. By introducing a feedback mechanism, they offer improved robustness against environmental variations.
 
-Butterfly PUFs: Butterfly PUFs combine two Ring Oscillator PUFs to enhance the quality and randomness of the responses. By introducing a feedback mechanism, they offer improved robustness against environmental variations.
-
-
-1.2.2 Extrinsic PUFs
-Concept of Extrinsic PUFs
+\end{itemize}
+subsubsection{Extrinsic PUFs}
 
 Extrinsic PUFs differ from Intrinsic PUFs as they derive their responses from external environmental factors that influence the behavior of the chip. These external factors may include temperature variations, light levels, power supply fluctuations, and electromagnetic interference. The responses generated by Extrinsic PUFs can change under different operating conditions, leading to additional sources of randomness.
 
-Examples of Extrinsic PUFs
+Common Implementations of Extrinsic PUFs are:
+\begin{itemize}
+\item Ambient Light PUFs: Ambient light PUFs utilize the incident light level on the chip's surface to create distinct response patterns. Variations in light intensity cause corresponding variations in the generated responses, enabling unique identification.
 
-Ambient Light PUFs: Ambient light PUFs utilize the incident light level on the chip's surface to create distinct response patterns. Variations in light intensity cause corresponding variations in the generated responses, enabling unique identification.
-
-Temperature PUFs: Temperature PUFs exploit temperature-induced changes in the electrical characteristics of the chip. Different temperature levels result in varied responses, contributing to the unclonable behavior of the device.
+\item Temperature PUFs: Temperature PUFs exploit temperature-induced changes in the electrical characteristics of the chip. Different temperature levels result in varied responses, contributing to the unclonable behavior of the device.
+\end{itemize}
 \section{\textbf{Technical Manual}}
 (Aimed at engineers, technical users that work directly with source code etc.)
 
@@ -122,7 +104,5 @@ Here is the list of the libraries used:
 There are two main python modules, one for DSNU extraction and one for the enrollment procedure.
 %The modules are \textit{extract_dsnu.py} and \textit{enrollment.py}
 %\textit{server.py} 
-
-
 
 \end{document}
