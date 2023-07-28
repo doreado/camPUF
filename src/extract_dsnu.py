@@ -5,6 +5,7 @@ from scipy.signal import wiener
 from scipy.fftpack import dct, idct
 import cv2
 import logging
+import rawpy
 
 # implement 2D DCT
 def dct2(a):
@@ -19,9 +20,26 @@ def get_filtering_matrix(H, W, c):
     d[int(H*c):,int(W*c):] = 1
     return d
 
+def get_extension(file_path):
+    _, file_extension = os.path.splitext(file_path)
+    return file_extension.lower()
+
 def get_hf_noise(img_path, img_width, img_height, plot_results=False):
-    with open(img_path, 'rb') as file:
-        data = np.fromfile(file, dtype=np.uint16)
+    # Check extension
+    file_extension = get_extension(img_path)
+
+    if file_extension == ".raw":
+        # RAW
+        with open(img_path, 'rb') as file:
+            data = np.fromfile(file, dtype=np.uint16)
+    elif file_extension == ".dng":
+        # DNG
+        with rawpy.imread(img_path) as raw:
+            # Extract the raw image data as a 16-bit unsigned integer array
+            data = raw.raw_image.astype(np.uint16)
+    else:
+        logging.error(f"Unsupported image format ({file_extension})!")
+        return -1
 
     # Check if the image is read
     if data is None:
@@ -29,7 +47,10 @@ def get_hf_noise(img_path, img_width, img_height, plot_results=False):
         return -1
     
     # Reshape the 1D array to a 2D array (image) with the given width and height
-    gray_img = data.reshape((img_width, img_height))
+    if file_extension == ".raw":
+        gray_img = data.reshape((img_width, img_height))
+    else:
+        gray_img = data
 
     # Check if image is useful
     if gray_img.max() == 0:
