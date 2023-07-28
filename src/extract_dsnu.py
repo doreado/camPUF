@@ -24,39 +24,52 @@ def get_extension(file_path):
     _, file_extension = os.path.splitext(file_path)
     return file_extension.lower()
 
-def get_hf_noise(img_path, img_width, img_height, plot_results=False):
-    # Check extension
-    file_extension = get_extension(img_path)
+def get_hf_noise(img_paths, img_width, img_height, plot_results=False):
+    gray_img_average = None
+    n_frames = len(img_paths)
 
-    if file_extension == ".raw":
-        # RAW
-        with open(img_path, 'rb') as file:
-            data = np.fromfile(file, dtype=np.uint16)
-    elif file_extension == ".dng":
-        # DNG
-        with rawpy.imread(img_path) as raw:
-            # Extract the raw image data as a 16-bit unsigned integer array
-            data = raw.raw_image.astype(np.uint16)
-    else:
-        logging.error(f"Unsupported image format ({file_extension})!")
-        return -1
+    # Average on frames
+    for frame in img_paths:
+        # Check extension
+        file_extension = get_extension(frame)
 
-    # Check if the image is read
-    if data is None:
-        logging.error("Failed to read the image file!")
-        return -1
-    
-    # Reshape the 1D array to a 2D array (image) with the given width and height
-    if file_extension == ".raw":
-        gray_img = data.reshape((img_width, img_height))
-    else:
-        gray_img = data
+        if file_extension == ".raw":
+            # RAW
+            with open(frame, 'rb') as file:
+                data = np.fromfile(file, dtype=np.uint16)
+        elif file_extension == ".dng":
+            # DNG
+            with rawpy.imread(frame) as raw:
+                # Extract the raw image data as a 16-bit unsigned integer array
+                data = raw.raw_image.astype(np.uint16)
+        else:
+            logging.error(f"Unsupported image format ({file_extension})!")
+            return -1
 
-    # Check if image is useful
-    if gray_img.max() == 0:
-        logging.error("The image has no useful data!")
-        return -2
+        # Check if the image is read
+        if data is None:
+            logging.error("Failed to read the image file!")
+            return -1
+        
+        # Reshape the 1D array to a 2D array (image) with the given width and height
+        if file_extension == ".raw":
+            gray_img = data.reshape((img_width, img_height))
+        else:
+            gray_img = data
 
+        # Check if image is useful
+        if gray_img.max() == 0:
+            logging.error("The image has no useful data!")
+            return -2
+        
+        # Add to average
+        if gray_img_average is None:
+            gray_img_average = gray_img
+        else:
+            gray_img_average = gray_img_average + gray_img
+
+    gray_img_average = gray_img_average / n_frames
+        
     # Filter the image, applying the wiener filter
     filtered_img = wiener(np.float64(gray_img), (5,5))
 
@@ -101,17 +114,18 @@ def get_hf_noise(img_path, img_width, img_height, plot_results=False):
         f, (plot1, plot2, plot3) = plt.subplots(1, 3)
 
         plot1.axis("off")
-        plot1.set_title("Original")
-        plot1.imshow(gray_img)
+        plot1.set_title(f"Average of {n_frames} frames")
+        plot1.imshow(gray_img_average)
 
         plot2.axis("off")
         plot2.set_title("Noise image")
         plot2.imshow(noise_img)
 
         plot3.axis("off")
-        plot3.set_title("HF Noise image")
+        plot3.set_title("High Freq Noise image")
         plot3.imshow(hf_noise)
 
         plt.show()
 
+    logging.debug(f"[DEBUG] hf noise done on {n_frames} frames")
     return hf_noise

@@ -15,8 +15,8 @@ enroll_img = img_test_enroll
 auth_img = img_test_auth
 
 if not test:
-    enr_hf_noise = extract_dsnu.get_hf_noise(enroll_img, constants.dataset_width, constants.dataset_height)
-    auth_hf_noise = extract_dsnu.get_hf_noise(auth_img, constants.dataset_width, constants.dataset_height)
+    enr_hf_noise = extract_dsnu.get_hf_noise([enroll_img], constants.dataset_width, constants.dataset_height)
+    auth_hf_noise = extract_dsnu.get_hf_noise([auth_img], constants.dataset_width, constants.dataset_height)
 
     print(enr_hf_noise == auth_hf_noise)
 else:
