@@ -3,7 +3,7 @@ import enrollment
 import logging
 
 def enroll(enr_hf_noise):
-    logging.debug("[INFO] Start enrollment")
+    logging.debug("[DEBUG] Start enrollment")
     reload(enrollment)
     idx_bright, idx_dark = enrollment.get_indeces(enr_hf_noise)
 
@@ -14,23 +14,23 @@ def enroll(enr_hf_noise):
     logging.debug(min( idx_dark ))
     logging.debug(len( idx_dark ))
 
-    logging.debug("[INFO] Enrollment done")
+    logging.debug("[DEBUG] Enrollment done")
     return idx_bright, idx_dark
 
 def authenticate(idx_bright, idx_dark, auth_hf_noise):
-    logging.debug("[INFO] Authentication")
+    logging.debug("[DEBUG] Authentication")
 
     challenge = enrollment.get_challenge(idx_bright, idx_dark)
-    logging.debug("[DEBUG] sending Challenge", challenge)
+    logging.debug(f"[DEBUG] sending Challenge {challenge}")
     ref_key = enrollment.get_reference_key(challenge, idx_bright)
-    logging.debug("[DEBUG] reference key", ref_key)
+    logging.debug(f"[DEBUG] reference key {ref_key}")
     response = enrollment.get_response_key(auth_hf_noise.flatten(), challenge)
-    logging.debug("[DEBUG] response key", response)
+    logging.debug(f"[DEBUG] response key {response}")
 
     eq, hd = enrollment.are_equal(ref_key, response)
     if eq:
-        logging.debug("Authentication completed")
+        logging.debug("[DEBUG] Authentication completed")
         return True, hd
     else:
-        logging.debug("NEVER GONNA GIVE YOU UP")
+        logging.debug("[DEBUG] Authentication failed")
         return False, hd

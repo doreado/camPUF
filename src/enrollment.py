@@ -76,8 +76,6 @@ def hamming_distance(a, b):
         raise ValueError("Input lists must have the same length.")
 
     distance = sum(bit1 != bit2 for bit1, bit2 in zip(a, b))
-    logging.debug("[DEBUG] distance", distance)
-
     return distance
 
 def are_equal(challenge: list[int], response: list[int], hamming_threshold = constants.hamming_threshold):

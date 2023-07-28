@@ -1,3 +1,4 @@
+import logging
 import server
 import constants
 import extract_dsnu
@@ -7,8 +8,8 @@ import numpy as np
 test = False
 
 # Images
-img_test_enroll = os.path.join(constants.dataset_path, "set-01", "sensor-01", "img-01.raw")
-img_test_auth = os.path.join(constants.dataset_path, "set-01", "sensor-01", "img-02.raw")
+img_test_enroll = os.path.join(constants.dataset_path, "..", "dng", "pxl_1.dng")
+img_test_auth = os.path.join(constants.dataset_path, "..", "dng", "pxl_1.dng")
 
 enroll_img = img_test_enroll
 auth_img = img_test_auth
@@ -29,4 +30,5 @@ while(True):
     if i == 'e':
         idx_bright, idx_dark = server.enroll(enr_hf_noise)
     if i == 'a':
-        server.authenticate(idx_bright, idx_dark, auth_hf_noise)
+        a, hd = server.authenticate(idx_bright, idx_dark, auth_hf_noise)
+        logging.info(f"[INFO] Hamming Distance: {hd}")
