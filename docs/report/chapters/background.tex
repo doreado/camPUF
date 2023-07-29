@@ -69,8 +69,6 @@ Physically unclonable functions (PUFs) are a technique in hardware security that
 \textbf{Secure Communication}: PUF-based keys are valuable for securing communication channels, enabling secure and authenticated data transmission.
 
 
-\textbf{NON SO SE METTERE STA ROBA SOTTO CHE SAREBBE DA CAMBIARE PERCHE UGUALE A CHATGPT}
-
 \subsection{Categories of Implementation}
 PUFs can be categorized based on different operational principles and sources of randomness
 \subsubsection{Intrinsic PUFs}
@@ -83,8 +81,9 @@ Common Implementations of Intrinsic PUFs are:
 
 \item Ring Oscillator PUFs: Ring oscillator PUFs use the frequency differences in ring oscillators, circuits comprising an odd number of inverters. The varying delays in these oscillators result in distinctive response patterns, enabling the generation of cryptographic keys and unique device identifiers.
 
-\item Butterfly PUFs: Butterfly PUFs combine two Ring Oscillator PUFs to enhance the quality and randomness of the responses. By introducing a feedback mechanism, they offer improved robustness against environmental variations.
+\item SRAM PUFs: SRAM PUFs exploit the randomness in the power-up behavior of standard static random-access memory on a chip as a PUF.
 
+\item VIA PUFs: the Via PUFs technologies are based on "via" or "contact" formation during the standard CMOS fabrication process. 
 \end{itemize}
 \subsubsection{Extrinsic PUFs}
 
