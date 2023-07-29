@@ -8,15 +8,21 @@ import numpy as np
 test = False
 
 # Images
-img_test_enroll = os.path.join(constants.dataset_path, "..", "dng", "pxl_1.dng")
-img_test_auth = os.path.join(constants.dataset_path, "..", "dng", "pxl_1.dng")
-
-enroll_img = img_test_enroll
-auth_img = img_test_auth
+enroll_img = [
+    os.path.join(constants.dataset_path, "set-01", "sensor-01", "img-01.raw"),
+    os.path.join(constants.dataset_path, "set-01", "sensor-01", "img-02.raw"),
+    os.path.join(constants.dataset_path, "set-01", "sensor-01", "img-03.raw"),
+    os.path.join(constants.dataset_path, "set-01", "sensor-01", "img-04.raw"),
+    os.path.join(constants.dataset_path, "set-01", "sensor-01", "img-05.raw"),
+]
+auth_img = [
+    os.path.join(constants.dataset_path, "set-02", "sensor-01", "img-11.raw"),
+    os.path.join(constants.dataset_path, "set-02", "sensor-01", "img-12.raw"),
+]
 
 if not test:
-    enr_hf_noise = extract_dsnu.get_hf_noise([enroll_img], constants.dataset_width, constants.dataset_height)
-    auth_hf_noise = extract_dsnu.get_hf_noise([auth_img], constants.dataset_width, constants.dataset_height)
+    enr_hf_noise = extract_dsnu.get_hf_noise(enroll_img, constants.dataset_width, constants.dataset_height)
+    auth_hf_noise = extract_dsnu.get_hf_noise(auth_img, constants.dataset_width, constants.dataset_height)
 
     print(enr_hf_noise == auth_hf_noise)
 else:

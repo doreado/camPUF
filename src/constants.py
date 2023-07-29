@@ -10,6 +10,8 @@ dataset_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__fi
 # Images
 dataset_width = 3028
 dataset_height = 4080
+dataset_width_crop = 3024
+dataset_height_crop = 4032
 
 # Key Lenght
 key_length = 128*2
