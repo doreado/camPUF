@@ -3,14 +3,16 @@ import os
 import constants
 import extract_dsnu
 import server
+import warnings
+warnings.filterwarnings("ignore") # Ignore divide-by-zero warning
 
 # PATH VARIABLES
-img_test_enroll_dir = os.path.join(constants.dataset_path, "set-02", "sensor-01")
+img_test_enroll_dir = os.path.join(constants.dataset_path, "set-01", "sensor-01")
 width_enroll = constants.dataset_width
 height_enroll = constants.dataset_height
 num_frames_enroll = 5
 
-img_test_auth_dir = os.path.join(constants.dataset_path, "set-01", "sensor-01")
+img_test_auth_dir = os.path.join(constants.dataset_path, "..", "jpeg", "set-04", "sensor-1")
 width_auth = constants.dataset_width
 height_auth = constants.dataset_height
 
