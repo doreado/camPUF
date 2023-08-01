@@ -7,25 +7,27 @@ CAMPUFs leverage the unique physical variations inherent in CMOS integrated circ
 This documentation will present and underly principles of PUFs, explain the workings of CAMPUFs.
 \section{General Concepts}
 \begin{itemize}
-\item \textbf{PUF}: Physically Unclonable Function (PUF) is a security metric that exploits inherent device physical variations to produce an unclonable, 
-unique device response to a given input. Unclonability means that each PUF has a unpredictable response to stimuli, because the response is created by complex interactions between many random components.
-PUFs implement a challenge-response type of authentication. They act as a unique device identifier.
-//(TO WRITE: EXAMPLES OF PUFs)
-\item \textbf{Fixed Pattern Noise}: it is a particular noise pattern present on digital imaging sensors, caused by small differences in specific sensor pixels, patterns can result in brighter or darker pixels.
-    It is created from two sources: PRNU (Photo Response Non-Uniformity) and DSNU (Dark Signal Non-Uniformity). The latter will be the focus of our PUF implementation.
-\item \textbf{PRNU}: 
+\item \textbf{PUF}: Physically Unclonable Function (PUF) is a security metric in hardware sistems leveraging inherent device physical variations to produce an unclonable, 
+unique device response to a given input implementing a challenge-response type of authentication. Unclonability means that each PUF has a unpredictable response to a given input, because the response is created by complex interactions between many random components.
+They act as a unique device identifier.
 
-\item \textbf{DSNU}: Dark Signal Non-Uniformity is a type of noise that occurs in dark images. The intensity values for pixels does not start from zero, an offset is added on every pixel,
+\item \textbf{Challenge-Response Authentication}: authentication serves as a robust method based on a unique challenge provided to a device by an authenticator.
+    The device must create a response to the challenge, based on unique physical properties that only that specific device has.
+
+\item \textbf{Fixed Pattern Noise}: it is a particular noise pattern observed in digital imaging sensors due to small differences in specific sensor pixels, leading to variations in pixel brightness or darkness. 
+    This phenomenon is created from two sources: PRNU (Photo Response Non-Uniformity) and DSNU (Dark Signal Non-Uniformity). The latter will be the focus of our PUF implementation.
+
+    \item \textbf{PRNU}: Photo response non-uniformity, pixel response non-uniformity, or PRNU, is a form of fixed-pattern noise related to digital image sensors, as used in cameras and optical instruments. It happened due to the non-uniformity of image sensors, each cell responds with a different voltage level when illuminated with a uniform light source, and this leads to luminance inaccuracy at the pixel level.
+
+\item \textbf{DSNU}: Dark Signal Non-Uniformity is a form of noise encountered in dark images. The intensity values for pixels does not start from zero, an offset is added on every pixel,
     to avoid signal values dropping lower than zero. This makes each pixel to always have a non-zero value, which is the \textit{bias}.
     Fluctuation in the bias is the DSNU
-\item \textbf{Challenge-Response Authentication}: authentication method based on a unique challenge provided to a device by an authenticator.
-    The device must create a response to the challenge, based on unique physical properties that only that specific device has.
-\item 
+
 
 \end{itemize}
 
 Physically unclonable functions (PUFs) are a technique in hardware security that exploits inherent device variations to produce an unclonable, unique device response to a given input.
-\subsection{Purposes} TOTALMENTE COPIATI DA CHATGPT QUESTI
+\subsection{Purposes} 
 
 \textbf{Key Generation}: PUFs can generate cryptographic keys directly from the unique physical responses of the ICs. These keys can be used for secure communication, encryption, and data protection.
 
@@ -57,7 +59,7 @@ Physically unclonable functions (PUFs) are a technique in hardware security that
 \textbf{Practical Applications of PUFs}
 
 
-\textbf{Secure Key Generation}: PUF responses can be utilized to generate cryptographic keys without the need for additional storage of secret keys, enhancing the security of cryptographic protocols.
+\textbf{Secure Key Generation}: PUF responses can be utilized to generate cryptographic keys without the need for additional storage of secret keys, enhancing the security of cryptographic protocols.This applciation is divided in Secret Key Distribution and Secret Key Storage.
 
 
 \textbf{Hardware Authentication}: PUFs can be employed for secure device authentication, ensuring the legitimacy of hardware components and protecting against unauthorized access.
@@ -68,8 +70,6 @@ Physically unclonable functions (PUFs) are a technique in hardware security that
 
 \textbf{Secure Communication}: PUF-based keys are valuable for securing communication channels, enabling secure and authenticated data transmission.
 
-
-\textbf{NON SO SE METTERE STA ROBA SOTTO CHE SAREBBE DA CAMBIARE PERCHE UGUALE A CHATGPT}
 
 \subsection{Categories of Implementation}
 PUFs can be categorized based on different operational principles and sources of randomness
@@ -83,8 +83,9 @@ Common Implementations of Intrinsic PUFs are:
 
 \item Ring Oscillator PUFs: Ring oscillator PUFs use the frequency differences in ring oscillators, circuits comprising an odd number of inverters. The varying delays in these oscillators result in distinctive response patterns, enabling the generation of cryptographic keys and unique device identifiers.
 
-\item Butterfly PUFs: Butterfly PUFs combine two Ring Oscillator PUFs to enhance the quality and randomness of the responses. By introducing a feedback mechanism, they offer improved robustness against environmental variations.
+\item SRAM PUFs: SRAM PUFs exploit the randomness in the power-up behavior of standard static random-access memory on a chip as a PUF.
 
+\item VIA PUFs: the Via PUFs technologies are based on "via" or "contact" formation during the standard CMOS fabrication process. 
 \end{itemize}
 \subsubsection{Extrinsic PUFs}
 

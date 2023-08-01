@@ -1,5 +1,37 @@
 \chapter{Results}
-In this chapter we expect you to list and explain all the results that you have achieved. Pictures can be useful to explain the results. Think about this chapter as something similar to the demo of the oral presentation. You can also include pictures about use-cases (you can also decide to add use cases to the high level overview chapter).
+% In this chapter we expect you to list and explain all the results that you have achieved. Pictures can be useful to explain the results. Think about this chapter as something similar to the demo of the oral presentation. You can also include pictures about use-cases (you can also decide to add use cases to the high level overview chapter).
+
+\section{Dataset}
+After some testing, this dataset was eventually chosen \cite{dataset_url}. It is composed of various sets of both RAW and JPEG images taken with five different 12-megapixel Sony IMX377 camera sensors, used by Google Nexus 5X smartphones \cite{dataset_explanation}. The key aspect in the preference of this dataset over the others tested is that all the RAW images are completely dark photos taken with the sensor lens fully covered. This is critical since the DSNU extraction efficiency is highly influenced by the presence of any light source exposed to the sensor.
+
+Another advantage of chosing this dataset is that it was made with the purpose of testing another CamPUF implementation, having different relevant configuration ready to test, as for images taken in different room temperatures ($25^{\circ}$C, $35^{\circ}$C and $45^{\circ}$C). It is worth noting that for any real-world practical implementation, the images provided to the enrollment/authentication algorithm should be taken in a similar way, in RAW format and trying to cover the sensor lens as much as possible.
+
+\section{Testing}
+The dataset was then thoroughly tested using a python script (auto\_testing.py) that automated the following steps:
+
+\begin{enumerate}
+	\item Reading one or multiple images (and in this case, making the pixel-wide average).
+	\item Obtaining the reference key after enrolling with that image.
+	\item Trying to authenticate with a set of images, one after the other, by comparing the response key with the reference key generated from the previous step. If the Hamming Distance of the two keys is below a certain threshold, then the couple (\emph{enrollment image}, \emph{authentication image}) is said to be authenticated.
+	\item After trying all the images combinations, the script computes the Hamming Distance average for the couple (\emph{enrollment image}, \emph{authentication set}).
+\end{enumerate}
+
+The main difference when picking the \emph{authentication set} to use is the source sensor of the images with respect to the source sensor of the \emph{enrollment image}. Two different cases are distinguished:
+
+\begin{itemize}
+	\item \textbf{Intra-Sensor} testing: both the \emph{enrollment image} and the \emph{authentication set} come from the same source sensor.
+	\item \textbf{Inter-Sensor} testing: The \emph{enrollment image} and the \emph{authentication set} come from a different sensor.
+\end{itemize}
+
+For the algorithm to be of any use, when testing \textbf{Intra-Sensor} couples it is expected to yield positive results on the authentication, meaning that the \textbf{Intra-Sensor Hamming Distance} between the reference key and the response key must be low enough, ideally zero. [...] 
+
+\begin{figure}[h!]
+	\vspace{0.5cm}
+	\includegraphics[width=\textwidth, height=5 cm]{example-image-a}
+	\caption{This is the image \emph{caption}.}
+	\label{fig:dataset}
+\end{figure} 
+
 \section{Known Issues}
 If there is any known issue, limitation, error, problem, etc...explain it in this section. Use a specific subsection for each known issue. Issues can be related to many things, including design issues.
 \section{Future Work}

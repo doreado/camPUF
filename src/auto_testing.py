@@ -3,11 +3,18 @@ import os
 import constants
 import extract_dsnu
 import server
+import warnings
+warnings.filterwarnings("ignore") # Ignore divide-by-zero warning
 
 # PATH VARIABLES
 img_test_enroll_dir = os.path.join(constants.dataset_path, "set-01", "sensor-01")
+width_enroll = constants.dataset_width
+height_enroll = constants.dataset_height
 num_frames_enroll = 5
-img_test_auth_dir = os.path.join(constants.dataset_path, "set-01", "sensor-02")
+
+img_test_auth_dir = os.path.join(constants.dataset_path, "..", "jpeg", "set-04", "sensor-1")
+width_auth = constants.dataset_width
+height_auth = constants.dataset_height
 
 try:
     # Enrollment
@@ -24,7 +31,7 @@ try:
     for i in range(len(enroll_images)):
         enroll_images[i] = os.path.join(img_test_enroll_dir, enroll_images[i])
         
-    enr_hf_noise = extract_dsnu.get_hf_noise(enroll_images, constants.dataset_width, constants.dataset_height)
+    enr_hf_noise = extract_dsnu.get_hf_noise(enroll_images, width_enroll, height_enroll)
     idx_bright, idx_dark = server.enroll(enr_hf_noise)
     logging.info("[TESTING] enrollment done")
 
@@ -40,7 +47,7 @@ try:
     for filename in file_list_auth:
         i += 1
         auth_img = os.path.join(img_test_auth_dir, filename)
-        auth_hf_noise = extract_dsnu.get_hf_noise([auth_img], constants.dataset_width, constants.dataset_height)
+        auth_hf_noise = extract_dsnu.get_hf_noise([auth_img], width_auth, height_auth)
 
         auth, hd = server.authenticate(idx_bright, idx_dark, auth_hf_noise)
         hd_tot += hd

@@ -6,6 +6,7 @@ from scipy.fftpack import dct, idct
 import cv2
 import logging
 import rawpy
+import constants
 
 # implement 2D DCT
 def dct2(a):
@@ -42,6 +43,9 @@ def get_hf_noise(img_paths, img_width, img_height, plot_results=False):
             with rawpy.imread(frame) as raw:
                 # Extract the raw image data as a 16-bit unsigned integer array
                 data = raw.raw_image.astype(np.uint16)
+        elif file_extension == ".jpg":
+            # DNG
+            data = cv2.imread(frame)
         else:
             logging.error(f"Unsupported image format ({file_extension})!")
             return -1
@@ -54,6 +58,14 @@ def get_hf_noise(img_paths, img_width, img_height, plot_results=False):
         # Reshape the 1D array to a 2D array (image) with the given width and height
         if file_extension == ".raw":
             gray_img = data.reshape((img_width, img_height))
+            # Margins Cropping
+            left_margin = (gray_img.shape[0] - constants.dataset_width_crop) // 2
+            upper_margin = (gray_img.shape[1] - constants.dataset_height_crop) // 2
+            gray_img = gray_img[left_margin:left_margin + constants.dataset_width_crop, upper_margin:upper_margin + constants.dataset_height_crop]
+
+        elif file_extension == ".jpg":
+            gray_img = data[:, :, 2]
+
         else:
             gray_img = data
 
@@ -68,7 +80,7 @@ def get_hf_noise(img_paths, img_width, img_height, plot_results=False):
         else:
             gray_img_average = gray_img_average + gray_img
 
-    gray_img_average = gray_img_average / n_frames
+    gray_img = gray_img_average / n_frames
         
     # Filter the image, applying the wiener filter
     filtered_img = wiener(np.float64(gray_img), (5,5))
@@ -115,7 +127,7 @@ def get_hf_noise(img_paths, img_width, img_height, plot_results=False):
 
         plot1.axis("off")
         plot1.set_title(f"Average of {n_frames} frames")
-        plot1.imshow(gray_img_average)
+        plot1.imshow(gray_img)
 
         plot2.axis("off")
         plot2.set_title("Noise image")
