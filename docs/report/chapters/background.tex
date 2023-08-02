@@ -72,7 +72,7 @@ Noise on digital cameras has a lot of sources, but two main categories can be id
     \\CMOS-based imaging devices are primarily affected by pattern noise. This is due to amplifiers present in the pixel columns and in all the CMOS sensor, introducing additional noise.
 \end{enumerate}
 
-\begin{figure}[h!]
+\begin{figure}[h!]                      % REMEMBER TO REFERENCE THE IMAGE SOURCE
     \centering
     \includegraphics[width=0.6\textwidth]{images/Fixed_Noise_Pattern.jpeg}
     \caption{CMOS camera capting neurons. Average of 100 frames with 30ms exposure time.}
@@ -82,8 +82,42 @@ Noise on digital cameras has a lot of sources, but two main categories can be id
 Fixed Pattern Noise comes from two main sources: \textit{PRNU} (Photo Response Non-Uniformity) and \textit{DSNU} (Dark Signal Non-Uniformity).
 Figure \ref{fig:fixedpatternnoise} shows fixed pattern noise on the background of a frame average image. Frame averaging usually works to eliminate random noise, but it worsen fixed pattern noise.
 
+PRNU is caused by responsitivity variation between pixels and it is the dominant noise in illuminated images. PRNU has a lot of properties that make it useful as an image fingerprint.
+It survives lossy JPEG compression and for this reason it has been used for source identification or forgery detection. This property, however, makes PRNU bad as the basis of a PUF.
+Since it survives JPEG compression, the PRNU fingerprint can be obtained by anyone, if the image is shared without proper access control (an example would be an image shared on social media).
 
+To address this security problem, the PUF design uses DSNU fingerprint as its basis. DSNU is more difficult to be extracted in illuminated natural images, since it is not the dominant noise.
 
+\subsection{\textbf{DSNU}}
+\begin{figure}[h!]                      % REMEMBER TO REFERENCE THE IMAGE SOURCE
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/DSNU.png}
+    \caption{example of DSNU, 100 frames average with no illumination. The bias fluctuation is seen as regular column patterns.}
+    \label{fig:dsnu}
+\end{figure}
+
+Noise in digital cameras has a fluctuating behavior, and certain random noises errors can be positive or negative, which means that with a signal of zero and some negative noise, a pixel could have a negative value.
+From a software point of view, a negative value can be problematic. To avoid this, a positive offset is added to each pixel's value.
+
+This offset creates a background effect so that, even without light, each pixel has a non-zero value, which is called \textit{bias}.
+However, this bias is not constant through each pixel, because of CMOS column-to-column variations. This causes a fluctuation in the bias, which is the \textbf{DSNU}.
+Figure \ref{fig:dsnu} shows DSNU on a dark image with no illumination. While illumination does not affect DSNU, temperature and exposure time does (increasing exposure causes sensor to heat).
+
+\section{\textbf{Challenge-Response Authentication}}
+
+Challenge-Response Authentication is a security protocol used to verify the identity of a user by providing a challenge, to which the user must respond correctly.
+Often, the challenge would be a random nonce (random number used only once, to avoid replay attacks). The user applies a transformation on the random nonce and sends the response to the verifier.
+The CamPUF design uses the DSNU fingerprint as the basis for the challenge-response authentication protocol.
+This mechanism has the advantage of having a light communication overhead between the user's device and the verifier, which is useful, since this design is created with low-power devices (mobile devices) in mind.
+
+\begin{figure}[h!]                      % REMEMBER TO REFERENCE THE IMAGE SOURCE
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/Challenge_Response_Auth.png}
+    \caption{Simple schema which shows the Challenge-Response protocol}
+    \label{fig:cr_auth}
+\end{figure}
+
+The Figure \ref{fig:cr_auth} shows all the protocol steps and parties involved.
 
 
 
