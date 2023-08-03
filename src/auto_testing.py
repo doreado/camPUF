@@ -2,6 +2,7 @@ import logging
 import os
 import constants
 import extract_dsnu
+import device
 import server
 import warnings
 warnings.filterwarnings("ignore") # Ignore divide-by-zero warning
@@ -12,7 +13,7 @@ width_enroll = constants.dataset_width
 height_enroll = constants.dataset_height
 num_frames_enroll = 5
 
-img_test_auth_dir = os.path.join(constants.dataset_path, "..", "jpeg", "set-04", "sensor-1")
+img_test_auth_dir = os.path.join(constants.dataset_path,"set-01", "sensor-01")
 width_auth = constants.dataset_width
 height_auth = constants.dataset_height
 
@@ -48,8 +49,17 @@ try:
         i += 1
         auth_img = os.path.join(img_test_auth_dir, filename)
         auth_hf_noise = extract_dsnu.get_hf_noise([auth_img], width_auth, height_auth)
+        logging.debug("[DEBUG] Authentication")
 
-        auth, hd = server.authenticate(idx_bright, idx_dark, auth_hf_noise)
+        challenge = server.get_challenge(idx_bright, idx_dark)
+        logging.debug(f"[DEBUG] sending Challenge {challenge}")
+
+        response = device.get_response_key(auth_hf_noise.flatten(), challenge)
+        logging.debug(f"[DEBUG] response key {response}")
+
+        ref_key = server.get_reference_key(challenge, idx_bright)
+        auth, hd = server.authenticate(ref_key, response)
+
         hd_tot += hd
         if auth:
             auth_count += 1
