@@ -1,2 +1,49 @@
 \chapter{Implementation Details}
-This is where you explain what you have implemented and how you have implemented it. Place here all the details that you consider important, organize the chapter in sections and subsections to explain the development and your workflow.\\Given the self-explicative title of the chapter, readers usually skip it. This is ok, because this entire chapter is simply meant to describe the details of your work so that people that are very interested (such as people who have to evaluate your work or people who have to build something more complex starting from what you did) can fully understand what you developed or implemented.\\Don't worry about placing too many details in this chapter, the only essential thing is that you keep everything tidy, without mixing too much information (so make use of sections, subsections, lists, etc.). As usual, pictures are helpful.
+% This is where you explain what you have implemented and how you have implemented it. Place here all the details that you consider important, organize the chapter in sections and subsections to explain the development and your workflow.\\Given the self-explicative title of the chapter, readers usually skip it. This is ok, because this entire chapter is simply meant to describe the details of your work so that people that are very interested (such as people who have to evaluate your work or people who have to build something more complex starting from what you did) can fully understand what you developed or implemented.\\Don't worry about placing too many details in this chapter, the only essential thing is that you keep everything tidy, without mixing too much information (so make use of sections, subsections, lists, etc.). As usual, pictures are helpful.
+The developed project is a Python program that, given a set of enrollment images and an authentication image,
+
+There are two main
+
+The application has two way of mode testing. The
+
+Automatic and manual testing
+\section{DSNU fingerprint extraction}\label{sec:dsnu_extraction}
+The DSNU fingerprint extraction is implemented in the module \texttt{extract\_dsnu.py}. The only function called outside the module is \texttt{get\_hf\_noise}, while all the others are used internally.
+
+The function \texttt{get\_hf\_noise} returns a Numpy array containing the high frequencies of the noise, and accepts as inputs a list of paths pointing to the images, width and height of the images and a boolean variable, used to determine if the resulting noise should be shown or not.
+
+In order to obtain the fingerprint, the images are processed through the following steps.
+\begin{enumerate}
+\item{\textbf{Calculating the average between images.}}
+        Before being processed, the images are opened in different ways, depending on their extension. After that, bacause the RAW images in the choosen dataset do not contain information about their height and width nor margins, they are reshaped using the two input parameters and the margins are cropped. In that way, a 2-D numpy array is obtained independently the image format. This is, then, summed into an accumulator. This is substeps are repeated for each image in the list. Finally, when the loop ends, the average is computed, dividing the accumulator by the length of the input list.
+\item{\textbf{Denoising the image.}}
+        At this point, the average frame is denoised, invoking the \texttt{wiener} function included into \texttt{scipy.signal} module. The second parameter of the function indicates the windows dimension in which the filter is applied, $5\times5$ in this case. It should be noted that the filtering produces a floating point matrix, although before the filtering the images is an integer matrix. This is the reason of the interpolation after the filter.
+\item{\textbf{Retrieving the noise.}}
+        The noise is simply obtained subtracting the original image, with its denoised version. The function responsable of that is \texttt{absdiff} contained into the cv2 library.
+\item{\textbf{Removing the low frequencies components.}}
+        In this step the unique noise pattern should be already available, but it could be also retrieved in dark images that could be shared online. Since online images are usually compressed, cutting high frequency components, only these components should be used to extract the fingerprint. Thus, a high-pass filter is applied to the noise. This is done firstly transforming it into the \emph{discrete cosine domain}, using the function \texttt{dct2}, which is a wrapper of \texttt{dct} function provided by \texttt{scipy.fftpack}, suited for a two dimensional array. Then, a filtering matrix is built. Each element $d_{i,j}$ of the matrix is defined as
+        \begin{equation}
+          d_{i,j} = \begin{cases} 1, & \mbox{if } i \geq H \cdot c \mbox{ and } j \geq W \cdot c\\ 0, & \mbox{otherwise} \end{cases}
+        \end{equation}
+        where $H$ and  $W$ are the height and the width repectively, and $c$ is the cutoff constant between 0 and 1.
+        $c$ is set to $0.5$, resulting in a matrix of non-zeros values in a quarter only at the bottom-right.
+
+        The actual filtering is realized multiplying the filtering matrix and the DCT noise using \texttt{np.multilply}, which implmenents the \emph{Hadamard product}. The last step of the extraction is the the inverse of DCT operation, returning the noise to the original domain.
+
+        % TODO: add sth about plotting
+        %
+
+        \section{Enrollment}\label{sec:enrollment}
+        The enrollment operation is implmented by the function \texttt{enroll}, inside the \texttt{utils.py} module.
+
+
+        \section{Testing}\label{sec:testing}
+        The application has two mode of testing
+
+
+
+
+        %
+
+
+\end{enumerate}
