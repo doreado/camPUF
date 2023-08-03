@@ -80,7 +80,7 @@ Noise on digital cameras has a lot of sources, but two main categories can be id
 \end{figure}
 
 Fixed Pattern Noise comes from two main sources: \textit{PRNU} (Photo Response Non-Uniformity) and \textit{DSNU} (Dark Signal Non-Uniformity).
-Figure \ref{fig:fixedpatternnoise} shows fixed pattern noise on the background of a frame average image. Frame averaging usually works to eliminate random noise, but it worsen fixed pattern noise.
+Figure \ref{fig:fixedpatternnoise} shows fixed pattern noise on the background, the column patterns are present all over the image. Frame averaging usually works to eliminate random noise, but it worsen fixed pattern noise.
 
 PRNU is caused by responsitivity variation between pixels and it is the dominant noise in illuminated images. PRNU has a lot of properties that make it useful as an image fingerprint.
 It survives lossy JPEG compression and for this reason it has been used for source identification or forgery detection. This property, however, makes PRNU bad as the basis of a PUF.
@@ -108,7 +108,7 @@ Figure \ref{fig:dsnu} shows DSNU on a dark image with no illumination. While ill
 Challenge-Response Authentication is a security protocol used to verify the identity of a user by providing a challenge, to which the user must respond correctly.
 Often, the challenge would be a random nonce (random number used only once, to avoid replay attacks). The user applies a transformation on the random nonce and sends the response to the verifier.
 The CamPUF design uses the DSNU fingerprint as the basis for the challenge-response authentication protocol.
-This mechanism has the advantage of having a light communication overhead between the user's device and the verifier, which is useful, since this design is created with low-power devices (mobile devices) in mind.
+This mechanism has the advantage of having a light communication overhead between the user's device and the verifier, which is useful, since CamPUF is created with low-power devices (mobile devices) in mind.
 
 \begin{figure}[h!]                      % REMEMBER TO REFERENCE THE IMAGE SOURCE
     \centering
