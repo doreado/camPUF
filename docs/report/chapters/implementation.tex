@@ -1,12 +1,29 @@
 \chapter{Implementation Details}
 % This is where you explain what you have implemented and how you have implemented it. Place here all the details that you consider important, organize the chapter in sections and subsections to explain the development and your workflow.\\Given the self-explicative title of the chapter, readers usually skip it. This is ok, because this entire chapter is simply meant to describe the details of your work so that people that are very interested (such as people who have to evaluate your work or people who have to build something more complex starting from what you did) can fully understand what you developed or implemented.\\Don't worry about placing too many details in this chapter, the only essential thing is that you keep everything tidy, without mixing too much information (so make use of sections, subsections, lists, etc.). As usual, pictures are helpful.
-The developed project is a Python program that, given a set of enrollment images and an authentication image,
 
-There are two main
+\section{Prerequisites}\label{sec:prerequisited}
+\subsection{Definitions}\label{sec:label}
+The following are the elements used to explain the enrollment and authentication phase.
+\begin{itemize}
+  \item $L$: length of the key. 256 in the proposed implementation.
+  \item $N_{m}$: noise margin.
+  \item $N_{b}$: number of blocks in which the fingerprint is divided. Given by $L + N_{m}$
+  \item $D$: number of pixels in the image.
+\end{itemize}
 
-The application has two way of mode testing. The
+\subsection{Code structure}\label{sec:projectstructure}
+All the code can be found inside the \texttt{src} folder. The files are
+\begin{itemize}
+\item \texttt{constants.py}. The project-wide constants are set there. The \texttt{dataset\_path} variable determines which is the base directory of the dataset.
+\item \texttt{extract\_dsnu.py}. The purpose of this module is providing the \texttt{get\_hf\_noise} function, which returns the fingerprint of a given image.
+\item \texttt{server.py}. All the server-related operation, like the indeces registration, are implmented here.
+\item \texttt{device.py}. This file exposes a function that derives the response key.
+\item \texttt{auto\_testing.py}. This module is what is run
+\end{itemize}
 
-Automatic and manual testing
+\subsection{Setup}\label{subsec:setup}
+The application has been tested with Python 3.11.3 running on Arch Linux, with Linux 6.4.7.
+
 \section{DSNU fingerprint extraction}\label{sec:dsnu_extraction}
 The DSNU fingerprint extraction is implemented in the module \texttt{extract\_dsnu.py}. The only function called outside the module is \texttt{get\_hf\_noise}, while all the others are used internally.
 
@@ -14,13 +31,13 @@ The function \texttt{get\_hf\_noise} returns a Numpy array containing the high f
 
 In order to obtain the fingerprint, the images are processed through the following steps.
 \begin{enumerate}
-\item{\textbf{Calculating the average between images.}}
+\item \textbf{Calculating the average between images.}
         Before being processed, the images are opened in different ways, depending on their extension. After that, bacause the RAW images in the choosen dataset do not contain information about their height and width nor margins, they are reshaped using the two input parameters and the margins are cropped. In that way, a 2-D numpy array is obtained independently the image format. This is, then, summed into an accumulator. This is substeps are repeated for each image in the list. Finally, when the loop ends, the average is computed, dividing the accumulator by the length of the input list.
-\item{\textbf{Denoising the image.}}
+\item \textbf{Denoising the image.}
         At this point, the average frame is denoised, invoking the \texttt{wiener} function included into \texttt{scipy.signal} module. The second parameter of the function indicates the windows dimension in which the filter is applied, $5\times5$ in this case. It should be noted that the filtering produces a floating point matrix, although before the filtering the images is an integer matrix. This is the reason of the interpolation after the filter.
-\item{\textbf{Retrieving the noise.}}
+\item \textbf{Retrieving the noise.}
         The noise is simply obtained subtracting the original image, with its denoised version. The function responsable of that is \texttt{absdiff} contained into the cv2 library.
-\item{\textbf{Removing the low frequencies components.}}
+\item \textbf{Removing the low frequency components.}
         In this step the unique noise pattern should be already available, but it could be also retrieved in dark images that could be shared online. Since online images are usually compressed, cutting high frequency components, only these components should be used to extract the fingerprint. Thus, a high-pass filter is applied to the noise. This is done firstly transforming it into the \emph{discrete cosine domain}, using the function \texttt{dct2}, which is a wrapper of \texttt{dct} function provided by \texttt{scipy.fftpack}, suited for a two dimensional array. Then, a filtering matrix is built. Each element $d_{i,j}$ of the matrix is defined as
         \begin{equation}
           d_{i,j} = \begin{cases} 1, & \mbox{if } i \geq H \cdot c \mbox{ and } j \geq W \cdot c\\ 0, & \mbox{otherwise} \end{cases}
@@ -29,21 +46,32 @@ In order to obtain the fingerprint, the images are processed through the followi
         $c$ is set to $0.5$, resulting in a matrix of non-zeros values in a quarter only at the bottom-right.
 
         The actual filtering is realized multiplying the filtering matrix and the DCT noise using \texttt{np.multilply}, which implmenents the \emph{Hadamard product}. The last step of the extraction is the the inverse of DCT operation, returning the noise to the original domain.
+  \item \textbf{Plotting}
+        When the function \texttt{get\_hf\_noise} is called, an additional flag \texttt{plot\_results} could be set to plot the resulting noise. If the flag is true, then three graph will show the original image, the noise of the image and the high frequency of the noise. This could be useful to check if some pattern are evident by visual ispection.
 
-        % TODO: add sth about plotting
-        %
+        \section{Authentication server}\label{sec:authserver}
+        The server code is located in the \texttt{server.py} module. A minimal but functional server should be able of enrolling and authenticating a device.
 
-        \section{Enrollment}\label{sec:enrollment}
-        The enrollment operation is implmented by the function \texttt{enroll}, inside the \texttt{utils.py} module.
+        \subsection{Enrolling a new device}\label{subsec:enrollment}
+        The enrollment operation is implmented by the function \texttt{enroll}. It requires the high frequency noise as input, as the server should not receive the RAW images. The function produces a pair of arrays, containing one the linear indeces of bright pixels and the other of dark pixels, that are used in the authentication phase to generate the challenge to send to the device requiring authentication.
+        The actual indeces are computed by an auxiliary function, \texttt{get\_indeces}. This function performs the following steps. The input matrix is flattened into an array, and divided into $N_{b}$ blocks.
+        It could happen that the division results into blocks of different lengths; in these cases, given $L$ the length of the array, \texttt{np.array\_split} adds an element to the first $L \% N_{b}$ elements. This detail must be considered when the linear index of a certain pixel is derived, indeed an additional $L \% N_{b}$ term must be added to each element within a block with an index bigger than the reminder itself.
+        At this point, for each block the brightest pixel, corresponding to the biggest element, is found, and a new list of these pixels is built, keeping track of their block and linear index.
+        Sorted the new list by brightness, from the brighter half the \texttt{idx\_bright}
+        is built by means of pixels linear indeces. Finally, in the other half of the blocks, the darker pixels are sought, and, similarly to before, \texttt{idx\_dark} is built.
 
+        \subsection{Authenticate the device}\label{sec:authdevice}
+        \subparagraph{Creating the challenge.}
+        When a device requires authentication, the server sends a challenge to it. The challenge depends on the previously \texttt{idx\_bright} and \texttt{idx\_dark} registered lists.
+        The function that creates the challenge is \texttt{get\_challenge}. Using the function \texttt{random.sample}, $L/2$ elements are selected from \texttt{idx\_dark} and the remaining $L/2$ from \texttt{idx\_bright}. The challege is, thus, derived merging the selected values into a single array, and then sorting it.
+
+        \subparagraph{Checking the response.}
+        After the device sends back the response key, the server must compare it with the reference key. Since the server derives at run time the key, it should be computed before. The function \texttt{get\_reference\_key} is called with the challenge and the bright indeces as paramenters. It just creates a list of $0s$ and $1s$, returning a 1 if the $i$-th element of the challenge is in \texttt{idx\_bright}, otherwise a 0.
+        The server function that determine if the device is authenticated is \texttt{authenticate}, that takes the reference key and the response key as inputs, and returns true or false, depending on the outcome. An additional information about the hamming distance between the two keys is returned as well, although it is more a debugging information. The function \texttt{are\_equal} computes the hamming distance and compares it with a threshold defined in \texttt{constants.py}. If the distance does not exceed the threshold, the function returns true, authenticating the device.
+
+        \section{Device to authenticate}\label{sec:device2authenticate}
+        The device produces the responde key by means of the function \texttt{get\_responde\_key}. Using the fingerprint and the challenge, a list of integer is built. First of all, using the indeces in the challenge, the corresponding pixels are selected and stored in a list. Then, the median of the list is computed, and finally the response key is built. If the $i$-th element is greater than the median there is a $1$, otherwise it is a $0$.
 
         \section{Testing}\label{sec:testing}
-        The application has two mode of testing
-
-
-
-
-        %
-
-
+        The interaction between the device and the server is tested inside \texttt{auto\_testing.py}. In this script, the fingerprint of the given image(s) path is extracted and enrolled once. Then, for each file in the authentication file list the authentication is tried, following the steps shown before.
 \end{enumerate}
