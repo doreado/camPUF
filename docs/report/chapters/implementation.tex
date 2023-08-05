@@ -45,7 +45,7 @@ In order to obtain the fingerprint, the images are processed through the followi
         where $H$ and  $W$ are the height and the width respectively, and $c$ is the cutoff constant between 0 and 1.
         $c$ is set to $0.5$, resulting in a matrix of non-zeros values in a quarter only at the bottom-right.
 
-        The actual filtering is realized multiplying the filtering matrix and the DCT noise using \texttt{np.multilply}, which implements the \emph{Hadamard product}. The last step of the extraction is the the inverse of DCT operation, returning the noise to the original domain.
+        The actual filtering is realized multiplying the filtering matrix and the DCT noise by using \texttt{np.multilply}, which implements the \emph{Hadamard product}. The last step of the extraction is the the inverse of DCT operation, returning the noise to the original domain.
   \item \textbf{Plotting}
         When the function \texttt{get\_hf\_noise} is called, an additional flag \texttt{plot\_results} could be set to plot the resulting noise. If the flag is true, then three graph will show the original image, the noise of the image and the high frequency of the noise. This could be useful to check if some pattern are evident by visual inspection.
 

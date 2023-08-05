@@ -49,12 +49,14 @@ This simple data processing operations are performed using the external librarie
 At this point, the device has generated its DSNU fingerprint and wants to register it to the \textit{authenticator} server.
 The goal of this phase is to register the location of the brightest and darkest pixels of the high frequency component. The indices of all these locations are stored
 and then sent to the authenticator.
+
 \begin{figure}[h!]    
     \centering
-    \includegraphics[width=0.5\textwidth]{images/device_auth_flow.jpg}
+    \includegraphics[width=0.8\textwidth]{images/device_auth_flow.jpg}
     \caption{Device authentication flow}
     \label{fig:authflow}
 \end{figure}
+
 \subsection{Authentication phase}
 This phase is based on comparing the relative brightness of the registered pixels with the response sent from the device. The \textit{Hamming distance} is used as a
 metric for measuring the similarity between the two compared keys. A threshold is selected a priori to discriminate between legitimate and illegitimate response.
