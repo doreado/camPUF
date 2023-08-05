@@ -11,10 +11,11 @@
 Physically Unclonable Functions (PUFs) have gained significant attention in the hardware security domain, due to their ability to generate unique identifiers
 from physical variations in hardware components, which helps in the authentication and key generation domains. This report provides a comprehensive description
 of a particular PUF design, called CamPUF, which is based on CMOS image sensors.
+
 Inherent physical processes happening in image sensors are exploited, such as Fixed Pattern Noise and, in particular, one of its sources: the Dark Signal Non-Uniformity (DSNU).
 DSNU can be extracted by dark digital images, which means that a fingerprint based on this noise is harder to extract from illuminated images, where PRNU and other type of noises are prevalent.
 This design also includes an efficient and reliable key generation algorithm and a computationally light device authentication mechanism.
-\\
+
 A complete implementation of the CamPUF is provided, along with a high-level view of the solution and an explanation of the theory which is at the basis of this design.
 This document will show a comprehensive description, a complete testing procedure, along with the steps to replicate it, and an overview of the results, which
 will highlight the strengths and the reliability of this PUF design. At last, we also present an \textit{attack mitigation} section, to show the security against

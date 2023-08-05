@@ -1,5 +1,9 @@
 \chapter{Implementation Overview}
-In this chapter you should provide a general overview of the project, explaining what you have implemented staying at a high-level of abstraction, without going too much into the details. Leave details for the implementation chapter. This chapter can be organized in sections, such as goal of the project, issues to be solved, solution overview, etc.\\It is very important to add images, schemes, graphs to explain the original problem and your solution. Pictures are extremely useful to understand complex ideas that might need an entire page to be explained.\\Use multiple sections to explain the starting point of your project, the last section is going to be the high-level view of your solution...so take the reader in a short `journey` to showcase your work.
+In this chapter you should provide a general overview of the project, explaining what you have implemented staying at a high-level of abstraction, without going too much into the details. Leave details for the implementation chapter. This chapter can be organized in sections, such as goal of the project, issues to be solved, solution overview, etc.
+
+It is very important to add images, schemes, graphs to explain the original problem and your solution. Pictures are extremely useful to understand complex ideas that might need an entire page to be explained.
+
+Use multiple sections to explain the starting point of your project, the last section is going to be the high-level view of your solution...so take the reader in a short `journey` to showcase your work.
 
 \section{Introduction}
 The goal of this project was to design a CMOS-based PUF on a CMOS camera-based device.
@@ -32,7 +36,7 @@ Another small dataset was tested, with raw images provided by an Iphone and the 
 An explanation for this behavior could be that the images were not completely dark, which means that the DSNU extraction phase captures other type of noise other than DSNU,
 leading to a wrong fingerprint or sensors in modern phones could have DSNU removing capabilities, which leads to the same result: a lot of random noise on data extraction.
 The choice fell on a dataset provided by the authors of the CamPUF design that used two Android phones from the last decade, plus an application developed by them which uses the Camera2 API.
-The DSNU in this dataset was maximized, setting the ISO to the maximum and shutter speed set to the minimum. More information is disclosed in the \underline{\hyperref[chap:results]{Result}} chapter.
+The DSNU in this dataset was maximized, setting the ISO to the maximum and shutter speed set to the minimum. More information is disclosed in the \ref{sec:results} chapter.
 
 \section{Solution Architecture}
 \subsection{DSNU Fingerprint Extraction}
@@ -42,8 +46,8 @@ A \textbf{DCT Filter} is also used for removing low-frequency components, so tha
 This simple data processing operations are performed using the external libraries previously mentioned.
 
 \subsection{Enrollment phase}
-At this point, the device has generated its DSNU fingerprint and wants to registrate it to the \textit{authenticator} server.
-The goal of this phase is to registrate the location of the brightest and darkest pixels of the high frequency component. The indeces of all these locations are stored
+At this point, the device has generated its DSNU fingerprint and wants to register it to the \textit{authenticator} server.
+The goal of this phase is to register the location of the brightest and darkest pixels of the high frequency component. The indices of all these locations are stored
 and then sent to the authenticator.
 \begin{figure}[h!]    
     \centering
@@ -54,12 +58,5 @@ and then sent to the authenticator.
 \subsection{Authentication phase}
 This phase is based on comparing the relative brightness of the registered pixels with the response sent from the device. The \textit{Hamming distance} is used as a
 metric for measuring the similarity between the two compared keys. A threshold is selected a priori to discriminate between legitimate and illegitimate response.
-\\
+
 Figure \ref{fig:authflow} shows the authentication flow of CamPUF.
-
-
-
-
-
-
-

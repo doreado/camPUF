@@ -1,15 +1,16 @@
 % In the background chapter you should provide all the information required to acquire a sufficient knowledge to understand other chapters of the report. Suppose the reader is not familiar with the topic; so, for instance, if your project was focused on implementing a VPN, explain what it is and how it works. This chapter is supposed to work kind of like a "State of the Art" chapter of a thesis.\\ Organize the chapter in multiple sections and subsections depending on how much background information you want to include. It does not make any sense to mix background information about several topics, so you can split the topics in multple sections.\\Assume that the reader does not know anything about the topics and the tecnologies, so include in this chapter all the relevant information. Despite this, we are not asking you to write 20 pages in this chapter. Half a page, a page, or 2 pages (if you have a lot of information) for each `topic`(i.e. FreeRTOS, the SEcube, VPNs, Cryptomator, PUFs, Threat Monitoring....thinking about some of the projects...).
 \chapter{Background}
 In this era, as technology has become an integral part of modern life, digital security has become crucial. Hardware security is becoming even more significant, along with the need for development and research of robust hardware security measures.
+
 As technology advances, so do cyber threats. The rise of IoT and interconnected devices is also a crucial factor.
 In this environment, Physically Unclonable Functions (PUFs) have emerged as a promising approach to address the challenges of hardware authentication, secure key generation, and anti-counterfeiting measures. Among the various PUF implementations, Complementary Metal-Oxide-Semiconductor Arbiter PUFs (CAMPUFs) stand out as a powerful hardware security primitive based on CMOS technology.
-\\
+
 CAMPUFs leverage the unique physical variations inherent in CMOS integrated circuits to generate unpredictable and practically unclonable responses. The foundation of CMOS technology, with its low power consumption and high integration capabilities, makes it an ideal platform for building complex digital circuits and implementing PUFs.
-\\
+
 This chapter will provide an overview of the concepts that are the basis for the CamPUF design and that are needed in order to understand it.
 
 \section{Physically Unclonable Functions}
-A Physically Unclonable Function (PUF) is a security metric in hardware sistems based on inherent device physical variations to produce an unclonable, 
+A Physically Unclonable Function (PUF) is a security metric in hardware systems based on inherent device physical variations to produce an unclonable, 
 unique device response to a given input. Unclonability means that each PUF has a unpredictable response to a given input, due to the response being created by complex interactions between many random components.
 The response acts as a unique device identifier, a sort of "digital fingerprint" for the device.
 
@@ -27,7 +28,7 @@ The response acts as a unique device identifier, a sort of "digital fingerprint"
 \textbf{Key Security Properties of PUFs}
 \begin{itemize}
 \item \textbf{Unpredictability}: The inherent randomness linked to  PUF responses, even when given the same challenge multiple times. This property makes stonger the security of PUF-based authentication and key generation.
-\item \textbf{Uniqueness and Unclonability}: PUFs depend on the uniqueness of their physical microstructure. This microstructure depends on random physical factors introduced during manufacturing that gives unique reponses. These factors are unpredictable and uncontrollable, which makes it virtually impossible to duplicate or clone the structure.
+\item \textbf{Uniqueness and Unclonability}: PUFs depend on the uniqueness of their physical microstructure. This microstructure depends on random physical factors introduced during manufacturing that gives unique responses. These factors are unpredictable and uncontrollable, which makes it virtually impossible to duplicate or clone the structure.
 \item \textbf{Resistance to Physical Attacks}: PUFs are resilient against various physical attacks, including invasive attacks like reverse engineering and probing, as well as non-invasive attacks like side-channel analysis.
 \end{itemize}
 \textbf{Practical Applications of PUFs}
@@ -43,7 +44,7 @@ PUFs can be categorized based on different operational principles and sources of
 \subsubsection{Intrinsic PUFs}
 
 Intrinsic PUFs are characterized by their reliance on the inherent physical variations present within a single chip during the semiconductor manufacturing process. These variations arise due to manufacturing imperfections, process fluctuations, and random dopant fluctuations. The unique characteristics of each individual chip create a fingerprint-like response, making Intrinsic PUFs ideal for hardware authentication and identification purposes.
-\\
+
 Common Implementations of Intrinsic PUFs are:
 \begin{itemize}
 \item Delay PUFs: Delay PUFs exploit the differences in signal propagation delay along various paths within the circuit. By measuring these delays, a set of unique challenge-response pairs can be generated, forming the basis for secure authentication.
@@ -54,7 +55,7 @@ Common Implementations of Intrinsic PUFs are:
 \subsubsection{Extrinsic PUFs}
 
 Extrinsic PUFs differ from Intrinsic PUFs as they derive their responses from external environmental factors that influence the behavior of the chip. These external factors may include temperature variations, light levels, power supply fluctuations, and electromagnetic interference. The responses generated by Extrinsic PUFs can change under different operating conditions, leading to additional sources of randomness.
-\\
+
 Common Implementations of Extrinsic PUFs are:
 \begin{itemize}
 \item Ambient Light PUFs: Ambient light PUFs utilize the incident light level on the chip's surface to create distinct response patterns. Variations in light intensity cause corresponding variations in the generated responses, enabling unique identification.
@@ -69,7 +70,8 @@ Noise on digital cameras has a lot of sources, but two main categories can be id
     that hit a single pixel during a prolonged exposure.
 \item \textbf{Fixed Pattern Noise}: Caused by small differences in sensors pixels, often noticeable during long exposure shots. These small differences
     can be caused by variations in pixel size, or interferences in the sensor circuitry. External factors (such as temperature or exposure times) can also affect this type of noise.
-    \\CMOS-based imaging devices are primarily affected by pattern noise. This is due to amplifiers present in the pixel columns and in all the CMOS sensor, introducing additional noise.
+    
+    CMOS-based imaging devices are primarily affected by pattern noise. This is due to amplifiers present in the pixel columns and in all the CMOS sensor, introducing additional noise.
 \end{enumerate}
 
 \begin{figure}[h!]                      % REMEMBER TO REFERENCE THE IMAGE SOURCE
