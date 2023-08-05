@@ -61,7 +61,7 @@ Common Implementations of Extrinsic PUFs are:
 \item Temperature PUFs: Temperature PUFs exploit temperature-induced changes in the electrical characteristics of the chip. Different temperature levels result in varied responses, contributing to the unclonable behavior of the device.
 \end{itemize}
 
-\section{\textbf{Fixed Pattern Noise}}
+\section{Fixed Pattern Noise}
 Noise on digital cameras has a lot of sources, but two main categories can be identified
 \begin{enumerate}
 \item \textbf{Random Noise}: Not constant from frame to frame and can be reduced using frame averaging. In digital images, \textit{temporal noise} is often observed. It is
@@ -88,7 +88,7 @@ Since it survives JPEG compression, the PRNU fingerprint can be obtained by anyo
 
 To address this security problem, the PUF design uses DSNU fingerprint as its basis. DSNU is more difficult to be extracted in illuminated natural images, since it is not the dominant noise.
 
-\subsection{\textbf{DSNU}}
+\subsection{DSNU}
 \begin{figure}[h!]                      % REMEMBER TO REFERENCE THE IMAGE SOURCE
     \centering
     \includegraphics[width=0.6\textwidth]{images/DSNU.png}
@@ -103,7 +103,7 @@ This offset creates a background effect so that, even without light, each pixel 
 However, this bias is not constant through each pixel, because of CMOS column-to-column variations. This causes a fluctuation in the bias, which is the \textbf{DSNU}.
 Figure \ref{fig:dsnu} shows DSNU on a dark image with no illumination. While illumination does not affect DSNU, temperature and exposure time does (increasing exposure causes sensor to heat).
 
-\section{\textbf{Challenge-Response Authentication}}
+\section{Challenge-Response Authentication}
 
 Challenge-Response Authentication is a security protocol used to verify the identity of a user by providing a challenge, to which the user must respond correctly.
 Often, the challenge would be a random nonce (random number used only once, to avoid replay attacks). The user applies a transformation on the random nonce and sends the response to the verifier.
@@ -118,30 +118,3 @@ This mechanism has the advantage of having a light communication overhead betwee
 \end{figure}
 
 The Figure \ref{fig:cr_auth} shows all the protocol steps and parties involved.
-
-
-
-% \section{\textbf{Technical Manual}}
-
-% // DA RIMUOVERE/MODIFICARE/SPOSTARE
-
-% (Aimed at engineers, technical users that work directly with source code etc.)
-
-% (Provide architectural overview of the project components and explain their interactions)
-
-% (code structure, key modules + tools required to build project and run it)
-
-% This camPUF implementation is based on CMOS image sensors, typically present on modern smartphone cameras.
-% The entirety of the project consists of a digital signal processing part and a device authentication part.
-% All the project is implemented using Python3
-% Here is the list of the libraries used:
-
-% \begin{itemize}
-% \item Opencv: computer vision library, used to extract data from raw images
-% \item scipy: python library that provides mathematical instruments and algorithms
-% \item MatPlotlib: graph library for math visualizations
-% \end{itemize}
-
-% There are two main python modules, one for DSNU extraction and one for the enrollment procedure.
-% %The modules are \textit{extract_dsnu.py} and \textit{enrollment.py}
-% %\textit{server.py}
