@@ -21,8 +21,9 @@ In addition, the following Python libraries must be installed
 \end{lstlisting}
 
 \section{Prepare the images dataset}\label{sec:preparetheimagedataset}
-An images dataset could be found here
-\texttt{path/to/dataset}
+An images dataset could be found at \url{https://wisest.ece.wisc.edu/research-old/mobile-and-embedded-security/campuf-dataset/}.
+
+Inside $src/auto\_testing.py$ the \texttt{img\_test\_enroll\_dir} and \texttt{img\_test\_auth\_dir} variables must be set to the folder containing the enrollment and authentication images repectively. The script searches for images automatically. The number of images used for the enrollment can be adjusted modifying the \texttt{num\_frames\_enroll} (the default value is 5). After the enrollment, the script tries to authenticate all the images in the authentication folder.
 
 \section{Run the script}\label{sec:runthescript}
 \begin{lstlisting}[language=bash]
