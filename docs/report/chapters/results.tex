@@ -2,27 +2,19 @@
 % In this chapter we expect you to list and explain all the results that you have achieved. Pictures can be useful to explain the results. Think about this chapter as something similar to the demo of the oral presentation. You can also include pictures about use-cases (you can also decide to add use cases to the high level overview chapter).
 
 \section{Testing of the CamPUF}
-[TODO: write]
+The effectiveness and reliability of the CamPUF implementation were thoroughly evaluated through a comprehensive testing process. This section presents the details of the dataset used for testing, the setup of the testing environment, and the expected results. Additionally, the outcomes of the testing process will be presented, showcasing the algorithm's performance in various scenarios.
 
 \subsection{Dataset}\label{sec:dataset}
-After some testing, this dataset was eventually chosen \cite{dataset_url}. It is composed of various sets of both RAW and JPEG images taken with five different 12-megapixel Sony IMX377 camera sensors, used by Google Nexus 5X smartphones \cite{dataset_explanation}. The key aspect in the preference of this dataset over the others tested is that all the RAW images are completely dark photos taken with the sensor lens fully covered. This is critical since the DSNU extraction efficiency is highly influenced by the presence of any light source exposed to the sensor.
+After some testing, this dataset was eventually chosen \cite{dataset_url}. It is composed of various sets of both RAW and JPEG images taken with five different 12-megapixel Sony IMX377 camera sensors, used by Google Nexus 5X smartphones \cite{dataset_explaination}. The key aspect in the preference of this dataset over the others tested is that all the RAW images are completely dark photos taken with the sensor lens fully covered. This is critical since the DSNU extraction efficiency is highly influenced by the presence of any light source exposed to the sensor. \ref{fig:dataset}
 
 Another advantage of choosing this dataset is that it was made with the purpose of testing another CamPUF implementation, having different relevant configuration ready to test, as for images taken in different room temperatures ($25^{\circ}$C, $35^{\circ}$C and $45^{\circ}$C). It is worth noting that for any real-world practical implementation, the images provided to the enrollment/authentication algorithm should be taken in a similar way, in RAW format and trying to cover the sensor lens as much as possible.
 
-[TODO: referring to pictures below explain why newer sensor models could have less DSNU noise to rely on]
-
 \begin{figure}[h!]
 	\vspace{0.5cm}
-	\includegraphics[width=\textwidth, height=5 cm]{example-image-a}
-	\caption{This is the image \emph{caption}.}
+	\centering
+	\includegraphics[width=\textwidth]{images/DSNU_S2S1I1.png}
+	\caption{Example of DSNU extraction from one image of the dataset.}
 	\label{fig:dataset}
-\end{figure} 
-
-\begin{figure}[h!]
-	\vspace{0.5cm}
-	\includegraphics[width=\textwidth, height=5 cm]{example-image-a}
-	\caption{This is the image \emph{caption}.}
-	\label{fig:dataset2}
 \end{figure} 
 
 \subsection{Setup}
@@ -132,15 +124,79 @@ Despite the slight increase in Intra-Sensor Hamming Distances with rising temper
 
 In conclusion, the CamPUF implementation demonstrates promising temperature resilience. While the average Intra-Sensor Hamming Distance increases with higher temperatures, it remains negligible compared to the Inter-Sensor Hamming Distance. This reinforces the algorithm's effectiveness in providing secure and accurate device authentication across different environmental conditions.
 
-\subsection{Attacks Mitigation}
-TODO:
+\subsection{Shared Images Attacks Mitigation}
+
+One important aspect to address when considering the security of CamPUF is the potential vulnerability to attacks where an attacker tries to authenticate using images taken from the victim sensor, if shared on platforms like social networks or the internet. However, the CamPUF implementation has inherent defense mechanisms that effectively mitigate these potential threats in two key ways:
+
+\subsubsection{Difficulty of Obtaining Useful Images}
+
+A fundamental aspect of the CamPUF enrollment process is the use of completely dark images with the sensor lens fully covered. This means that during enrollment, the CamPUF captures the sensor's unique noise pattern in the absence of any light sources. As a result, the enrollment phase requires acquiring and processing specific dark images, which are not commonly shared or readily available to the attacker. This rarity of sharing completely dark images limits attackers ability to obtain the specific enrollment images needed to replicate the CamPUF response.
+
+\subsubsection{Impact of JPEG Compression}
+
+Even if an attacker manages to acquire and share a dark image used for enrollment, the authentication process remains highly resistant to attacks due to JPEG compression. When images are shared on social networks or the internet, they are often subjected to JPEG compression, a lossy compression technique that reduces file size by discarding high-frequency components.
+
+In the context of CamPUF, this JPEG compression has a crucial impact on the DSNU extraction process. The noise pattern required for CamPUF authentication predominantly resides in the high-frequency components of the sensor images. However, during JPEG compression, these high-frequency components are significantly altered or discarded, rendering the compressed image practically unusable for the DSNU extraction process.
+
+This can be observed in the difference between the high-frequency components of RAW and JPEG dark images \ref{fig:jpeg_comp}. The JPEG-compressed image loses essential details, making it unsuitable for accurate DSNU extraction.
+
+\begin{figure}[h!]
+	\centering
+	\vspace{0.5cm}
+	\includegraphics{images/jpeg_vs_raw_HF.png}
+	\caption{Comparison of High-Frequency Components in RAW and JPEG Dark Images}
+	\label{fig:jpeg_comp}
+\end{figure}
+
+As a result, if an attacker attempts to authenticate using a JPEG-compressed dark image, the Hamming distances observed in testing would be similar to the \emph{Intra-Sensor Hamming Distances}. In other words, the image is seen from the authentication algorithm as one coming from a different sensor, even if the original RAW image is from the same one used to enroll.
+
+This will lead to the JPEG image correctly not being authenticated, as expected.
+
+In conclusion, the CamPUF implementation showcases robust defense mechanisms against potential attacks. The use of uncommon enrollment images, coupled with the profound impact of JPEG compression on shared images, ensures the reliability and security of the authentication process. These defense mechanisms effectively safeguard the CamPUF implementation from unauthorized access and fraudulent attempts, making it a secure and trustworthy authentication solution for various applications.
 
 \section{Known Issues}
 % If there is any known issue, limitation, error, problem, etc...explain it in this section. Use a specific subsection for each known issue. Issues can be related to many things, including design issues.
-The main limitation of this implementation of CamPUF is the need for a dataset of images highly similar to the one used for testing described in \ref{sec:dataset}. Even if the TODO:
+The main limitation of this implementation of CamPUF is the need for a dataset of images highly similar to the one used for testing described in \ref{sec:dataset}. The CamPUF algorithm has demonstrated promising results using the specific dataset employed for testing. However, it is essential to acknowledge some known issues that should be addressed to ensure the algorithm's broader applicability and reliability.
+
+While the dataset's characteristics, such as completely dark photos with covered sensor lenses, are crucial for efficient DSNU extraction, the algorithm's generalization to other datasets or real-world images remains uncertain. Variations in lighting conditions, exposure settings, and environmental factors in different image sources could influence the noise patterns and, in turn, impact the algorithm's authentication performance. 
+
+Another important aspect is that newer sensors may exhibit different noise characteristics, including potentially low DSNU components. This could affect the algorithm's ability to accurately extract the unique noise pattern necessary for device authentication. Fine-tuning the algorithm's parameters is also essential to achieve an optimal balance between security and efficiency. Ensuring the algorithm's adaptability to different datasets, sensor models, and environmental conditions through extensive research and testing will be vital in enhancing its robustness and real-world applicability.
 
 
 \section{Future Work}
 % Adding a section about how to improve the project is not mandatory but it is useful to show that you actually understood the topics of the project and have ideas for improvements.
 \label{sec:future_work}
 
+As the CamPUF implementation progresses towards real-world deployment, several key areas of focus for future work will enhance its performance, security, and practicality:
+
+\subsubsection{Generalization to All Images}
+
+Currently, the CamPUF implementation relies on a specific dataset consisting of completely dark photos with the sensor lens fully covered. Future work will involve generalizing the algorithm to work with various types of images, accommodating real-world scenarios where images may contain diverse lighting conditions. Ensuring the algorithm's robustness and accuracy across a broader range of images will be essential for its practical application.
+
+\subsubsection{On-Device Key Extraction Application}
+
+Developing a dedicated on-device key extraction application will be a crucial step in enabling secure and efficient authentication directly on devices. The application will capture and process the sensor's raw data, deriving the device's unique noise pattern, and generating the corresponding key. The focus will be on optimizing the application for resource efficiency to minimize computational overhead and power consumption.
+
+\subsubsection{Trusted Server Implementation}
+
+Implementing a trusted server system is also crucial for managing the enrollment and authentication processes for the CamPUF. The server-side software will securely store and manage the reference keys of enrolled devices. It will be responsible for performing the authentication process, comparing the response keys generated by the devices during authentication with the stored reference keys. Ensuring the security and integrity of communication between devices and the server will also be of utmost importance.
+
+\subsubsection{Fine-Tuning Parameters}
+
+Optimizing various parameters of the CamPUF implementation will be vital to achieving the desired balance between security and efficiency. Parameters such as key length, Hamming distance threshold, and the number of frames averaged during enrollment and authentication will be fine-tuned through rigorous testing and analysis. The objective is to customize the CamPUF to meet specific security requirements while ensuring a seamless user experience.
+
+\subsubsection{Temperature Resilience Optimization}
+
+Enhancing the algorithm's temperature resilience will be a critical aspect of future work. With temperature changes impacting sensor outputs, the CamPUF should maintain reliable authentication performance under varying environmental conditions. Further optimization and fine-tuning will be conducted to ensure consistent and accurate authentication even with fluctuating temperatures.
+
+\subsubsection{Security Analysis}
+
+Conducting advanced security analysis will be instrumental in assessing the CamPUF's resilience against potential attacks. Thorough vulnerability assessments and penetration testing will be performed to identify and address any potential weaknesses. Evaluating the algorithm's robustness against sophisticated attacks, such as machine learning-based approaches or adversarial attacks, will be crucial to reinforcing its security measures.
+
+\subsubsection{Real-World Deployment}
+
+Deploying the CamPUF implementation in real-world environments and diverse application domains will be a key step in validating its effectiveness and reliability. The deployment process will involve integrating the on-device key extraction application and trusted server implementation into the target devices and server infrastructure. Real-world deployment will provide valuable feedback and performance data under various conditions, enabling iterative improvements and optimizations.
+
+\subsubsection{Integration with Existing Systems}
+
+Seamless integration of the CamPUF authentication mechanism with existing authentication systems and security frameworks will be a primary consideration. Ensuring compatibility and interoperability with a wide range of devices and applications will enhance its adoption and usability in real-world scenarios.
