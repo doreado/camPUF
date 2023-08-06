@@ -84,8 +84,6 @@ Moreover, it was observed that a relatively low threshold of 4 bits is adequate 
 
 The \textbf{Inter-Sensor} testing results align with expectations, showing Hamming Distances around 50\%, which is in line with the expected Hamming Distance between two random bit sequences. This confirms that CamPUF effectively discriminates between images taken from different sensors, providing a reliable mechanism to prevent unauthorized access.
 
-In conclusion, the testing results demonstrate that the CamPUF implementation is capable of providing robust and accurate authentication.
-
 \subsubsection{Temperature Resilience}\label{sec:temperature}
 
 One critical aspect of the CamPUF implementation is its resilience to changes in temperature, which can impact the quality of sensor outputs. Higher temperatures often lead to increased random noise coming from the electrons inside the CMOS sensors, resulting in less noticeable DSNU noise that the algorithm relies on. We conducted testing under varying temperatures to assess the algorithm's performance in such scenarios.
@@ -121,8 +119,6 @@ The sensor tested for Intra-Sensor testing was Sensor 1, and the temperature cha
 As expected, the results show that the average Intra-Sensor Hamming Distance rises with increasing temperatures. At 25°C, the Hamming Distances remain negligible (0.0\%) for both one frame and five frames enrollments, indicating that even with minimal data, the algorithm achieves accurate authentication. However, at higher temperatures of 35°C and 45°C, the Intra-Sensor Hamming Distances slightly increase to 1.7\% and 5.3\% (for one frame enrollment), and 1.8\% and 4.5\% (for five frames enrollment), respectively.
 
 Despite the slight increase in Intra-Sensor Hamming Distances with rising temperatures, they remain significantly low compared to the Inter-Sensor Hamming Distances, which are consistently around 50.8\% for one frame enrollment and 51.8\% for five frames enrollment. This highlights the algorithm's robustness and its ability to maintain reliable authentication even under varying temperatures.
-
-In conclusion, the CamPUF implementation demonstrates promising temperature resilience. While the average Intra-Sensor Hamming Distance increases with higher temperatures, it remains negligible compared to the Inter-Sensor Hamming Distance. This reinforces the algorithm's effectiveness in providing secure and accurate device authentication across different environmental conditions.
 
 \subsection{Shared Images Attacks Mitigation}\label{sec:attacks}
 
