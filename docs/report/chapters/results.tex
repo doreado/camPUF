@@ -5,7 +5,7 @@
 The effectiveness and reliability of the CamPUF implementation were thoroughly evaluated through a comprehensive testing process. This section presents the details of the dataset used for testing, the setup of the testing environment, and the expected results. Additionally, the outcomes of the testing process will be presented, showcasing the algorithm's performance in various scenarios.
 
 \subsection{Dataset}\label{sec:dataset}
-After some testing, this dataset was eventually chosen \cite{dataset_url}. It is composed of various sets of both RAW and JPEG images taken with five different 12-megapixel Sony IMX377 camera sensors, used by Google Nexus 5X smartphones \cite{dataset_explaination}. The key aspect in the preference of this dataset over the others tested is that all the RAW images are completely dark photos taken with the sensor lens fully covered. This is critical since the DSNU extraction efficiency is highly influenced by the presence of any light source exposed to the sensor. \ref{fig:dataset}
+After some testing, this dataset was eventually chosen \cite{dataset}. It is composed of various sets of both RAW and JPEG images taken with five different 12-megapixel Sony IMX377 camera sensors, used by Google Nexus 5X smartphones. The key aspect in the preference of this dataset over the others tested is that all the RAW images are completely dark photos taken with the sensor lens fully covered. This is critical since the DSNU extraction efficiency is highly influenced by the presence of any light source exposed to the sensor. [Figure \ref{fig:dataset}]
 
 Another advantage of choosing this dataset is that it was made with the purpose of testing another CamPUF implementation, having different relevant configuration ready to test, as for images taken in different room temperatures ($25^{\circ}$C, $35^{\circ}$C and $45^{\circ}$C). It is worth noting that for any real-world practical implementation, the images provided to the enrollment/authentication algorithm should be taken in a similar way, in RAW format and trying to cover the sensor lens as much as possible.
 
@@ -40,7 +40,7 @@ The main parameters used were generally:
 	\item \textbf{Key Length}: 256 bits, both for the reference key and the response key.
 	\item \textbf{Hamming Distance Threshold}: 4 bits.
 	\item \textbf{Number of Frames Averaged}: 5 frames for the enrollment, 1 frame for the authentication.
-	\item \textbf{Number of Images tested for Authentication}: generally 50 for each run, 20 in the case of temperature testing. \ref{sec:temperature}
+	\item \textbf{Number of Images tested for Authentication}: generally 50 for each run, 20 in the case of temperature testing. [Chapter \ref{sec:temperature}]
 \end{itemize}
 
 \subsubsection{Expected Results}
@@ -86,7 +86,7 @@ The \textbf{Inter-Sensor} testing results align with expectations, showing Hammi
 
 \subsubsection{Temperature Resilience}\label{sec:temperature}
 
-One critical aspect of the CamPUF implementation is its resilience to changes in temperature, which can impact the quality of sensor outputs. Higher temperatures often lead to increased random noise coming from the electrons inside the CMOS sensors, resulting in less noticeable DSNU noise that the algorithm relies on. We conducted testing under varying temperatures to assess the algorithm's performance in such scenarios.
+One critical aspect of the CamPUF implementation is its resilience to changes in temperature, which can impact the quality of sensor outputs. Higher temperatures often lead to increased random noise coming from the electrons inside the CMOS sensors, resulting in less noticeable DSNU noise that the algorithm relies on \cite{temperature}. We conducted testing under varying temperatures to assess the algorithm's performance in such scenarios.
 
 The sensor tested for Intra-Sensor testing was Sensor 1, and the temperature changes refer to the room temperature relative to the images used for the authentication phase. The enrollment was always done with a room temperature of 25°C.
 
@@ -130,7 +130,7 @@ A fundamental aspect of the CamPUF enrollment process is the use of completely d
 
 \subsubsection{Impact of JPEG Compression}
 
-Even if an attacker manages to acquire and share a dark image used for enrollment, the authentication process remains highly resistant to attacks due to JPEG compression. When images are shared on social networks or the internet, they are often subjected to JPEG compression, a lossy compression technique that reduces file size by discarding high-frequency components.
+Even if an attacker manages to acquire and share a dark image used for enrollment, the authentication process remains highly resistant to attacks due to JPEG compression. When images are shared on social networks or the internet, they are often subjected to JPEG compression, a lossy compression technique that reduces file size by discarding high-frequency components. \cite{jpeg}
 
 In the context of CamPUF, this JPEG compression has a crucial impact on the DSNU extraction process. The noise pattern required for CamPUF authentication predominantly resides in the high-frequency components of the sensor images. However, during JPEG compression, these high-frequency components are significantly altered or discarded, rendering the compressed image practically unusable for the DSNU extraction process.
 
