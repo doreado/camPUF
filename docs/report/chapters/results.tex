@@ -150,15 +150,13 @@ This can be observed in the difference between the high-frequency components of 
 
 As a result, if an attacker attempts to authenticate using a JPEG-compressed dark image, the Hamming distances observed in testing would be similar to the \emph{Intra-Sensor Hamming Distances}. In other words, the image is seen from the authentication algorithm as one coming from a different sensor, even if the original RAW image is from the same one used to enroll. This will lead to the JPEG image correctly not being authenticated, as expected.
 
-In conclusion, the CamPUF implementation showcases robust defense mechanisms against potential attacks. The use of uncommon enrollment images, coupled with the profound impact of JPEG compression on shared images, ensures the reliability and security of the authentication process. These defense mechanisms effectively safeguard the CamPUF implementation from unauthorized access and fraudulent attempts, making it a secure and trustworthy authentication solution for various applications.
-
 \section{Known Issues}
 % If there is any known issue, limitation, error, problem, etc...explain it in this section. Use a specific subsection for each known issue. Issues can be related to many things, including design issues.
-The main limitation of this implementation of CamPUF is the need for a dataset of images highly similar to the one used for testing described in \ref{sec:dataset}. The CamPUF algorithm has demonstrated promising results using the specific dataset employed for testing. However, it is essential to acknowledge some known issues that should be addressed to ensure the algorithm's broader applicability and reliability.
+The main limitation of this implementation of CamPUF is the need for a dataset of images highly similar to the one used for testing described in \ref{sec:dataset}. The CamPUF algorithm has demonstrated promising results using the specific dataset employed for testing.
 
-While the dataset's characteristics, such as completely dark photos with covered sensor lenses, are crucial for efficient DSNU extraction, the algorithm's generalization to other datasets or real-world images remains uncertain. Variations in lighting conditions, exposure settings, and environmental factors in different image sources could influence the noise patterns and, in turn, impact the algorithm's authentication performance. 
+While the dataset's characteristics, are crucial for efficient DSNU extraction, the algorithm's generalization to other datasets or real-world images remains uncertain. Variations in lighting conditions, exposure settings, and environmental factors in different image sources could influence the noise patterns and, in turn, impact the algorithm's authentication performance. 
 
-Another important aspect is that newer sensors may exhibit different noise characteristics, including potentially low DSNU components. This could affect the algorithm's ability to accurately extract the unique noise pattern necessary for device authentication. Fine-tuning the algorithm's parameters is also essential to achieve an optimal balance between security and efficiency. Ensuring the algorithm's adaptability to different datasets, sensor models, and environmental conditions through extensive research and testing will be vital in enhancing its robustness and real-world applicability.
+Another important aspect is that newer sensors may exhibit different noise characteristics, including potentially lower DSNU components. This could affect the algorithm's ability to accurately extract the unique noise pattern necessary for device authentication.
 
 
 \section{Future Work}
