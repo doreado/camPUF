@@ -11,11 +11,11 @@ Some material was already available through the project proposal. A comprehensiv
 related to PUF technologies and various PUF designs.
 
 The usage of smartphone camera as a PUF basis is a relatively recent field, but a lot of PUF designs have been proposed. From exploiting the randomness of oxide breakdown in CMOS
-sensors, to pixel variation noise. Even SRAM memory modules attached to some camera models were exploited to generate PUFs.
+sensors \cite{oxidecmosPUF}, to pixel variation noise \cite{pixelvarPUF}. Even SRAM memory modules attached to some camera models were exploited to generate PUFs\cite{SRAMPUF}.
 
 A particular implementation emerged as a candidate for the project. It contained a complete description of the design implementation from a mathematical point of view.
 The setup used for the experiment validation was well described, together with the theory principles that were at the basis of the design.
-The implementation is called CamPUF and the research paper is referenced in [?]
+The implementation is called CamPUF and the research paper is referenced in \cite{campuf}
 
 
 \section{Methodology}
@@ -45,15 +45,13 @@ At this point, the device has generated its DSNU fingerprint and wants to regist
 The goal of this phase is to register the location of the brightest and darkest pixels of the high frequency component. The indices of all these locations are stored
 and then sent to the authenticator.
 
+\subsection{Authentication phase}
+This phase is based on comparing the relative brightness of the registered pixels with the response sent from the device. The \textit{Hamming distance} is used as a
+metric for measuring the similarity between the two compared keys. A threshold is selected a priori to discriminate between legitimate and illegitimate response.
 \begin{figure}[h!]    
     \centering
     \includegraphics[width=0.8\textwidth]{images/device_auth_flow.jpg}
     \caption{Device authentication flow}
     \label{fig:authflow}
 \end{figure}
-
-\subsection{Authentication phase}
-This phase is based on comparing the relative brightness of the registered pixels with the response sent from the device. The \textit{Hamming distance} is used as a
-metric for measuring the similarity between the two compared keys. A threshold is selected a priori to discriminate between legitimate and illegitimate response.
-
 Figure \ref{fig:authflow} shows the authentication flow of CamPUF.

@@ -61,10 +61,10 @@ Noise on digital cameras has a lot of sources, but two main categories can be id
     \\CMOS-based imaging devices are primarily affected by pattern noise. This is due to amplifiers present in the pixel columns and in all the CMOS sensor, introducing additional noise.
 \end{enumerate}
 
-\begin{figure}[h!]                      % REMEMBER TO REFERENCE THE IMAGE SOURCE
+\begin{figure}[h!]                      
     \centering
     \includegraphics[width=0.6\textwidth]{images/Fixed_Noise_Pattern.jpeg}
-    \caption{CMOS camera capting neurons. Average of 100 frames with 30ms exposure time.}
+    \caption{CMOS camera capting neurons. Average of 100 frames with 30ms exposure time. \cite{pattnoise}}
     \label{fig:fixedpatternnoise}
 \end{figure}
 
@@ -78,10 +78,10 @@ Since it survives JPEG compression, the PRNU fingerprint can be obtained by anyo
 To address this security problem, the PUF design uses DSNU fingerprint as its basis. DSNU is more difficult to be extracted in illuminated natural images, since it is not the dominant noise.
 
 \subsection{DSNU}
-\begin{figure}[h!]                      % REMEMBER TO REFERENCE THE IMAGE SOURCE
+\begin{figure}[h!]                      
     \centering
     \includegraphics[width=0.6\textwidth]{images/DSNU.png}
-    \caption{example of DSNU, 100 frames average with no illumination. The bias fluctuation is seen as regular column patterns.}
+    \caption{example of DSNU, 100 frames average with no illumination. The bias fluctuation is seen as regular column patterns. \cite{pattnoise}}
     \label{fig:dsnu}
 \end{figure}
 
@@ -99,7 +99,7 @@ Often, the challenge would be a random nonce (random number used only once, to a
 The CamPUF design uses the DSNU fingerprint as the basis for the challenge-response authentication protocol.
 This mechanism has the advantage of having a light communication overhead between the user's device and the verifier, which is useful, since CamPUF is created with low-power devices (mobile devices) in mind.
 
-\begin{figure}[h!]                      % REMEMBER TO REFERENCE THE IMAGE SOURCE
+\begin{figure}[h!]                      
     \centering
     \includegraphics[width=0.6\textwidth]{images/Challenge_Response_Auth.png}
     \caption{Simple schema which shows the Challenge-Response protocol}
