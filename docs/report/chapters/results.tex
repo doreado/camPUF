@@ -78,7 +78,7 @@ The results were gathered after several runs of the \emph{auto\_testing.py} scri
 	\label{fig:results_graph}
 \end{figure}
 
-As evident from the graph, the CamPUF algorithm performed exceptionally well in \textbf{Intra-Sensor} testing. Even with just one image for enrollment, the Hamming Distance between the reference key and the response key was found to be remarkably low. This demonstrates that a single image is sufficient to achieve accurate intra-sensor authentication, showcasing the efficiency of the algorithm.
+As evident from the graph in Figure \ref{fig:results_graph}, the CamPUF algorithm performed exceptionally well in \textbf{Intra-Sensor} testing. Even with just one image for enrollment, the Hamming Distance between the reference key and the response key was found to be remarkably low. This demonstrates that a single image is sufficient to achieve accurate intra-sensor authentication, showcasing the efficiency of the algorithm.
 
 Moreover, it was observed that a relatively low threshold of 4 bits is adequate to determine authentication success. This means that if the Hamming Distance falls below the threshold, the authentication process is successful. Fine-tuning this threshold allows for balancing between security and convenience. Lowering the threshold can increase security but may require more attempts to successfully authenticate. Conversely, increasing the threshold may reduce security but lead to faster and easier authentication.
 
@@ -116,7 +116,7 @@ The sensor tested for Intra-Sensor testing was Sensor 1, and the temperature cha
 	\label{fig:temperature_graph}
 \end{figure}
 
-As expected, the results show that the average Intra-Sensor Hamming Distance rises with increasing temperatures. At 25°C, the Hamming Distances remain negligible (0.0\%) for both one frame and five frames enrollments, indicating that even with minimal data, the algorithm achieves accurate authentication. However, at higher temperatures of 35°C and 45°C, the Intra-Sensor Hamming Distances slightly increase to 1.7\% and 5.3\% (for one frame enrollment), and 1.8\% and 4.5\% (for five frames enrollment), respectively.
+As expected, the results in Figure \ref{fig:temperature_graph} show that the average Intra-Sensor Hamming Distance rises with increasing temperatures. At 25°C, the Hamming Distances remain negligible (0.0\%) for both one frame and five frames enrollments, indicating that even with minimal data, the algorithm achieves accurate authentication. However, at higher temperatures of 35°C and 45°C, the Intra-Sensor Hamming Distances slightly increase to 1.7\% and 5.3\% (for one frame enrollment), and 1.8\% and 4.5\% (for five frames enrollment), respectively.
 
 Despite the slight increase in Intra-Sensor Hamming Distances with rising temperatures, they remain significantly low compared to the Inter-Sensor Hamming Distances, which are consistently around 50.8\% for one frame enrollment and 51.8\% for five frames enrollment. This highlights the algorithm's robustness and its ability to maintain reliable authentication even under varying temperatures.
 
@@ -134,7 +134,7 @@ Even if an attacker manages to acquire and share a dark image used for enrollmen
 
 In the context of CamPUF, this JPEG compression has a crucial impact on the DSNU extraction process. The noise pattern required for CamPUF authentication predominantly resides in the high-frequency components of the sensor images. However, during JPEG compression, these high-frequency components are significantly altered or discarded, rendering the compressed image practically unusable for the DSNU extraction process.
 
-This can be observed in the difference between the high-frequency components of RAW and JPEG dark images \ref{fig:jpeg_comp}. The JPEG-compressed image loses essential details, making it unsuitable for accurate DSNU extraction.
+This can be observed in the difference between the high-frequency components of RAW and JPEG dark images [Figure \ref{fig:jpeg_comp}]. The JPEG-compressed image loses essential details, making it unsuitable for accurate DSNU extraction.
 
 \begin{figure}[h!]
 	\centering
@@ -148,7 +148,7 @@ As a result, if an attacker attempts to authenticate using a JPEG-compressed dar
 
 \section{Known Issues}
 % If there is any known issue, limitation, error, problem, etc...explain it in this section. Use a specific subsection for each known issue. Issues can be related to many things, including design issues.
-The main limitation of this implementation of CamPUF is the need for a dataset of images highly similar to the one used for testing described in \ref{sec:dataset}. The CamPUF algorithm has demonstrated promising results using the specific dataset employed for testing.
+The main limitation of this implementation of CamPUF is the need for a dataset of images highly similar to the one used for testing described in [Chapter \ref{sec:dataset}]. The CamPUF algorithm has demonstrated promising results using the specific dataset employed for testing.
 
 While the dataset's characteristics, are crucial for efficient DSNU extraction, the algorithm's generalization to other datasets or real-world images remains uncertain. Variations in lighting conditions, exposure settings, and environmental factors in different image sources could influence the noise patterns and, in turn, impact the algorithm's authentication performance. 
 
@@ -179,7 +179,7 @@ Parameters such as \emph{key length}, \emph{Hamming distance threshold}, and the
 
 \subsubsection{Security Analysis}
 
-While the main weakness of CamPUF, \emph{shared images} attacks, is described in \ref{sec:attacks}, other areas of this implementation need to be evaluated to find other possible vulnerabilities.
+While the main weakness of CamPUF, \emph{shared images} attacks, is described in [Chapter \ref{sec:attacks}], other areas of this implementation need to be evaluated to find other possible vulnerabilities.
 
 \subsubsection{Real-World Integration \& Deployment}
 
