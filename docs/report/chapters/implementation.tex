@@ -42,7 +42,7 @@ In order to obtain the fingerprint, the images are processed through the followi
         \begin{equation}
           d_{i,j} = \begin{cases} 1, & \mbox{if } i \geq H \cdot c \mbox{ and } j \geq W \cdot c\\ 0, & \mbox{otherwise} \end{cases}
         \end{equation}
-        where $H$ and  $W$ are the height and the width respectively, and $c$ is the cutoff constant between 0 and 1.
+        where $H$ and  $W$ are the height and the width respectively, and $c$ is the cutoff constant between 0 and 1 \cite{campuf}.
         $c$ is set to $0.5$, resulting in a matrix of non-zeros values in a quarter only at the bottom-right.
 
         The actual filtering is realized multiplying the filtering matrix and the DCT noise by using \texttt{np.multilply}, which implements the \emph{Hadamard product}. The last step of the extraction is the the inverse of DCT operation, returning the noise to the original domain.
