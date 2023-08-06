@@ -16,7 +16,7 @@ All the code can be found inside the \texttt{src} folder. The files are
 \begin{itemize}
 \item \texttt{constants.py}. The project-wide constants are set there. The \texttt{dataset\_path} variable determines which is the base directory of the dataset.
 \item \texttt{extract\_dsnu.py}. The purpose of this module is providing the \texttt{get\_hf\_noise} function, which returns the fingerprint of a given image.
-\item \texttt{server.py}. All the server-related operation, like the indeces registration, are implmented here.
+\item \texttt{server.py}. All the server-related operation, like the indices registration, are implemented here.
 \item \texttt{device.py}. This file exposes a function that derives the response key.
 \item \texttt{auto\_testing.py}. This module is what is run
 \end{itemize}
@@ -53,12 +53,12 @@ In order to obtain the fingerprint, the images are processed through the followi
         The server code is located in the \texttt{server.py} module. A minimal but functional server should be able of enrolling and authenticating a device.
 
         \subsection{Enrolling a new device}\label{subsec:enrollment}
-        The enrollment operation is implemented by the function \texttt{enroll}. It requires the high frequency noise as input, as the server should not receive the RAW images. The function produces a pair of arrays, containing one the linear indeces of bright pixels and the other of dark pixels, that are used in the authentication phase to generate the challenge to send to the device requiring authentication.
-        The actual indeces are computed by an auxiliary function, \texttt{get\_indeces}. This function performs the following steps. The input matrix is flattened into an array, and divided into $N_{b}$ blocks.
+        The enrollment operation is implemented by the function \texttt{enroll}. It requires the high frequency noise as input, as the server should not receive the RAW images. The function produces a pair of arrays, containing one the linear indices of bright pixels and the other of dark pixels, that are used in the authentication phase to generate the challenge to send to the device requiring authentication.
+        The actual indices are computed by an auxiliary function, \texttt{get\_indices}. This function performs the following steps. The input matrix is flattened into an array, and divided into $N_{b}$ blocks.
         It could happen that the division results into blocks of different lengths; in these cases, given $L$ the length of the array, \texttt{np.array\_split} adds an element to the first $L \% N_{b}$ elements. This detail must be considered when the linear index of a certain pixel is derived, indeed an additional $L \% N_{b}$ term must be added to each element within a block with an index bigger than the reminder itself.
         At this point, for each block the brightest pixel, corresponding to the biggest element, is found, and a new list of these pixels is built, keeping track of their block and linear index.
         Sorted the new list by brightness, from the brighter half the \texttt{idx\_bright}
-        is built by means of pixels linear indeces. Finally, in the other half of the blocks, the darker pixels are sought, and, similarly to before, \texttt{idx\_dark} is built.
+        is built by means of pixels linear indices. Finally, in the other half of the blocks, the darker pixels are sought, and, similarly to before, \texttt{idx\_dark} is built.
 
         \subsection{Authenticate the device}\label{sec:authdevice}
         \subparagraph{Creating the challenge.}
@@ -66,11 +66,11 @@ In order to obtain the fingerprint, the images are processed through the followi
         The function that creates the challenge is \texttt{get\_challenge}. Using the function \texttt{random.sample}, $L/2$ elements are selected from \texttt{idx\_dark} and the remaining $L/2$ from \texttt{idx\_bright}. The challenge is, thus, derived merging the selected values into a single array, and then sorting it.
 
         \subparagraph{Checking the response.}
-        After the device sends back the response key, the server must compare it with the reference key. Since the server derives at run time the key, it should be computed before. The function \texttt{get\_reference\_key} is called with the challenge and the bright indeces as parameters. It just creates a list of $0s$ and $1s$, returning a 1 if the $i$-th element of the challenge is in \texttt{idx\_bright}, otherwise a 0.
+        After the device sends back the response key, the server must compare it with the reference key. Since the server derives at run time the key, it should be computed before. The function \texttt{get\_reference\_key} is called with the challenge and the bright indices as parameters. It just creates a list of $0s$ and $1s$, returning a 1 if the $i$-th element of the challenge is in \texttt{idx\_bright}, otherwise a 0.
         The server function that determine if the device is authenticated is \texttt{authenticate}, that takes the reference key and the response key as inputs, and returns true or false, depending on the outcome. An additional information about the hamming distance between the two keys is returned as well, although it is more a debugging information. The function \texttt{are\_equal} computes the hamming distance and compares it with a threshold defined in \texttt{constants.py}. If the distance does not exceed the threshold, the function returns true, authenticating the device.
 
         \section{Device to authenticate}\label{sec:device2authenticate}
-        The device produces the response key by means of the function \texttt{get\_responde\_key}. Using the fingerprint and the challenge, a list of integer is built. First of all, using the indeces in the challenge, the corresponding pixels are selected and stored in a list. Then, the median of the list is computed, and finally the response key is built. If the $i$-th element is greater than the median there is a $1$, otherwise it is a $0$.
+        The device produces the response key by means of the function \texttt{get\_responde\_key}. Using the fingerprint and the challenge, a list of integer is built. First of all, using the indices in the challenge, the corresponding pixels are selected and stored in a list. Then, the median of the list is computed, and finally the response key is built. If the $i$-th element is greater than the median there is a $1$, otherwise it is a $0$.
 
         \section{Testing}\label{sec:testing}
         The interaction between the device and the server is tested inside \texttt{auto\_testing.py}. In this script, the fingerprint of the given image(s) path is extracted and enrolled once. Then, for each file in the authentication file list the authentication is tried, following the steps shown before.

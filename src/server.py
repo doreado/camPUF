@@ -5,7 +5,7 @@ import logging
 
 def enroll(enr_hf_noise):
     logging.debug("[DEBUG] Start enrollment")
-    idx_bright, idx_dark = get_indeces(enr_hf_noise)
+    idx_bright, idx_dark = get_indices(enr_hf_noise)
 
     logging.debug(max( idx_bright ))
     logging.debug(min( idx_bright ))
@@ -36,7 +36,7 @@ def get_linear_index(block_index, block_size, offset, rem):
 
     return block_index * block_size + offset
 
-def get_indeces(img: np.ndarray):
+def get_indices(img: np.ndarray):
     """
     Get the indices of brighter and darker pixels in an image.
 
